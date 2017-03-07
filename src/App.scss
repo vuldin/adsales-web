@@ -1,5 +1,10 @@
 @import '~normalize.css';
 @import '~react-md/src/scss/react-md';
 
+$md-light-theme: false;
+$md-primary-color: $md-green-500;
+//$md-secondary-color: $md-yellow-a-700;
+$md-secondary-color: $md-deep-orange-a-200;
+
 // Include all components
 @include react-md-everything;
