@@ -1,0 +1,52 @@
+{
+  "summaries": [
+    {
+      "id": 1,
+      "lotId": 1000,
+      "program": "Dance Competition",
+      "season": "S02",
+      "episode": "E08",
+      "genre": "Reality",
+      "timeSlotDescription": "Evening",
+      "dayOfWeek": "Thursday",
+      "targetGRP": 3.40,
+      "targetDemographics": "Women 18-54",
+      "initialCPM": 2.75,
+      "bsrp": 0.0,
+      "availableSpots": 6,
+      "reserveSpots": 2
+    },
+    {
+      "id": 1,
+      "lotId": 1000,
+      "program": "Urban Family",
+      "season": "S05",
+      "episode": "E06",
+      "genre": "Sitcom",
+      "timeSlotDescription": "Prime",
+      "dayOfWeek": "Wednesday",
+      "targetGRP": 4.40,
+      "targetDemographics": "Men 21-49",
+      "initialCPM": 3.50,
+      "bsrp": 0.0,
+      "availableSpots": 5,
+      "reserveSpots": 2
+    },
+    {
+      "id": 1,
+      "lotId": 1000,
+      "program": "Urban Family",
+      "season": "S05",
+      "episode": "E06",
+      "genre": "Sitcom",
+      "timeSlotDescription": "Prime",
+      "dayOfWeek": "Wednesday",
+      "targetGRP": 4.40,
+      "targetDemographics": "Men 21-49",
+      "initialCPM": 3.50,
+      "bsrp": 0.0,
+      "availableSpots": 5,
+      "reserveSpots": 2
+    }
+  ]
+}
