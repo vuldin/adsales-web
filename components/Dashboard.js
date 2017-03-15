@@ -74,6 +74,8 @@ export default class Dashboard extends PureComponent {
         <link rel='stylesheet' href='/static/react-md.min.css' />
         <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto:300,400,500' />
         <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Material+Icons' />
+        <script src='https://api.mapbox.com/mapbox-gl-js/v0.33.1/mapbox-gl.js'></script>
+        <link href='https://api.mapbox.com/mapbox-gl-js/v0.33.1/mapbox-gl.css' rel='stylesheet' />
       </Head>
       <NavigationDrawer
         navItems={navItems.filter(navItem => {
