@@ -9,23 +9,28 @@ Clone:
 git clone https://github.com/vuldin/adsales-web.git
 cd adsales-web
 ```
+Install yarn (faster replacement for npm):
+
+```bash
+npm i -g yarn
+```
 
 Install dependencies:
 
 ```bash
-npm install
+yarn
 ```
 
 This version uses a mock API made available through [json-server](https://github.com/typicode/json-server):
 
 ```bash
-npm i -g json-server
+yarn global add json-server
 json-server --watch api.json
 ```
 
 Run:
 ```bash
-npm run dev -- -p 3001
+yarn run dev -- -p 3001
 ```
 
 Then navigate to [http://localhost:3001](http://localhost:3001)
