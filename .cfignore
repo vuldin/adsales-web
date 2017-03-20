@@ -1,0 +1,8 @@
+.git/
+node_modules/
+api.json
+*~
+npm-debug.log
+*.swp
+launchConfigurations
+project.json
