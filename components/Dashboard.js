@@ -11,7 +11,8 @@ import ListItem from 'react-md/lib/Lists/ListItem'
 import NavigationDrawer from 'react-md/lib/NavigationDrawers'
 import SelectField from 'react-md/lib/SelectFields'
 
-const avatarSrc = 'https://cloud.githubusercontent.com/assets/13041/19686250/971bf7f8-9ac0-11e6-975c-188defd82df1.png'
+//const avatarSrc = 'https://cloud.githubusercontent.com/assets/13041/19686250/971bf7f8-9ac0-11e6-975c-188defd82df1.png'
+const avatarSrc = '/static/ibmlogo-grey-54x20.png'
 
 class NavigationLink extends PureComponent {
   render() {
@@ -51,7 +52,7 @@ export default class Dashboard extends PureComponent {
           key='0'
           component={NavigationLink}
           href='/'
-          leftIcon={<FontIcon>person</FontIcon>}
+          leftIcon={<FontIcon>account_box</FontIcon>}
           tileClassName='md-list-tile--mini'
           primaryText={'Home'}
         />,
@@ -62,9 +63,53 @@ export default class Dashboard extends PureComponent {
           key='1'
           component={NavigationLink}
           href='/release'
-          leftIcon={<FontIcon>person</FontIcon>}
+          leftIcon={<FontIcon>account_circle</FontIcon>}
           tileClassName='md-list-tile--mini'
           primaryText={'Release Inventory'}
+        />,
+      },
+      {
+        roles: ['Ad Agency'],
+        component: <ListItem
+          key='2'
+          component={NavigationLink}
+          href='/place'
+          leftIcon={<FontIcon>face</FontIcon>}
+          tileClassName='md-list-tile--mini'
+          primaryText={'Place Order'}
+        />,
+      },
+      {
+        roles: ['Ad Agency'],
+        component: <ListItem
+          key='3'
+          component={NavigationLink}
+          href='/map'
+          leftIcon={<FontIcon>perm_contact_calendar</FontIcon>}
+          tileClassName='md-list-tile--mini'
+          primaryText={'Ad-to-spot mapping'}
+        />,
+      },
+      {
+        roles: ['Broadcaster'],
+        component: <ListItem
+          key='4'
+          component={NavigationLink}
+          href='/report'
+          leftIcon={<FontIcon>perm_identity</FontIcon>}
+          tileClassName='md-list-tile--mini'
+          primaryText={'Report Aired Ads'}
+        />,
+      },
+      {
+        roles: ['Broadcaster', 'Ad Agency', 'Advertiser'],
+        component: <ListItem
+          key='5'
+          component={NavigationLink}
+          href='/trace'
+          leftIcon={<FontIcon>record_voice_over</FontIcon>}
+          tileClassName='md-list-tile--mini'
+          primaryText={'Trace Ads'}
         />,
       },
     ]
@@ -85,13 +130,14 @@ export default class Dashboard extends PureComponent {
         }).map(navItem => navItem.component)}
         contentClassName='md-grid'
         drawerHeaderChildren={[
+          /*
           <Avatar
             key={avatarSrc}
             src={avatarSrc}
             role='presentation'
             iconSized
-            style={{ alignSelf: 'center', marginLeft: 16, marginRight: 16, flexShrink: 0 }}
-          />,
+            style={{alignSelf: 'center', marginLeft: 16, marginRight: 16, flexShrink: 0}}
+          />,*/
           <SelectField
             id='account-switcher'
             defaultValue={this.state.role}
