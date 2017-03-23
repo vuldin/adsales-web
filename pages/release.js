@@ -8,17 +8,17 @@ import api from '../api.json'
 
 function uiToApi(val) {
   return {
-    adspotId: val.id,
+    adspotId: '' + val.id,
     programName: val.program,
     seasonEpisode: `${val.season}${val.episode}`,
     genre: val.genre,
     dayPart: `${val.timeSlotDescription} ${val.dayOfWeek}`,
-    targetGrp: val.targetGRP,
+    targetGrp: '' + val.targetGRP,
     targetDemographics: val.targetDemographics,
-    initialCpm: val.initialCPM,
-    bsrp: val.bsrp,
-    numberOfSpots: val.availableSpots,
-    numberReservedSpots: val.reserveSpots
+    initialCpm: '' + val.initialCPM,
+    bsrp: '' + val.bsrp,
+    numberOfSpots: '' + val.availableSpots,
+    numberReservedSpots: '' + val.reserveSpots
   }
 }
 
