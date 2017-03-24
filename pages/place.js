@@ -8,25 +8,32 @@ function apiToUi(val) {
   return {
     id: val.adspotId,
     program: val.programName,
-    //seasonEpisode: `${val.season}${val.episode}`,
-    season: val.seasonEpisode.substring(0, 3),
-    episode: val.seasonEpisode.substring(3, val.seasonEpisode.length),
+    broadcaster: val.broadcasterId,
     genre: val.genre,
-    //dayPart: `${val.timeSlotDescription} ${val.dayOfWeek}`,
+    dayPart : val.dayPart,
     timeSlotDescription: val.dayPart.split(' ')[0],
     dayOfWeek: val.dayPart.split(' ')[1],
     targetGRP: val.targetGrp,
     targetDemographics: val.targetDemographics,
     initialCPM: val.initialCpm,
     bsrp: val.bsrp,
-    availableSpots: val.numberOfSpots,
-    reserveSpots: val.numberReservedSpots
+    availableSpots: val.numberOfSpots
+  }
+}
+
+function uiToApi(val) {
+  return {
+    lotId: "" + val.lotId,
+    adspotId: '' + val.id,
+    advertiserId: val.advertiserId,
+    adContractId: val.adContractId,
+    numberOfSpots: '' + val.availableSpots
   }
 }
 
 export default class extends React.Component {
   static async getInitialProps() {
-    console.log('getInitialProps')
+    console.log('getInitialProps - place.js - queryPlaceOrders')
     let summaries = await request
       .post('//adsales-api-xrayyee.mybluemix.net/queryPlaceOrders')
       .type('form')
