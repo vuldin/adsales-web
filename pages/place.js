@@ -2,25 +2,33 @@ import React from 'react'
 import Dashboard from '../components/Dashboard'
 import request from 'superagent'
 import ExpansionList from 'react-md/lib/ExpansionPanels/ExpansionList'
-import SummaryForm from '../components/SummaryForm'
+import OrderForm from '../components/OrderForm'
 
 export default class extends React.Component {
   static async getInitialProps() {
-    let summaries = await request
-      .get('//localhost:3000/summaries')
-    summaries = summaries.body
-    return { summaries }
+    let orders = await request
+      .post('//adsales-api-xrayyee.mybluemix.net/queryplaceorders')
+      .type('form')
+      .send({
+        data: JSON.stringify({
+          agencyId: 'AgencyA',
+          broadcasterId: 'BroadcasterA',
+        }),
+      })
+    orders = JSON.parse(orders.text)
+    orders = orders.placedOrderData
+    return { orders }
   }
   constructor(props) {
     super(props)
     this.state = {
-      summaries: props.summaries,
+      orders: props.orders,
     }
   }
   render() {
     return <Dashboard>
       <ExpansionList>
-         {this.state.summaries.map( (summary, i) => <SummaryForm key={`summary${i}`} summary={summary}/>)}
+         {this.state.orders.map( (order, i) => <OrderForm key={`order${i}`} order={ order }/>)}
       </ExpansionList>
     </Dashboard>
   }

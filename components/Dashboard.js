@@ -69,7 +69,7 @@ export default class Dashboard extends PureComponent {
         />,
       },
       {
-        roles: ['Ad Agency'],
+        roles: ['Broadcaster', 'Ad Agency'],
         component: <ListItem
           key='2'
           component={NavigationLink}

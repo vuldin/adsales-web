@@ -26,7 +26,6 @@ function apiToUi(val) {
 
 export default class extends React.Component {
   static async getInitialProps() {
-    console.log('getInitialProps')
     let summaries = await request
       .post('//adsales-api-xrayyee.mybluemix.net/querytraceadspots')
       .type('form')
