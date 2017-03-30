@@ -23,30 +23,8 @@ class OrderLabel extends PureComponent {
 }
 
 export default class PlaceOrderForm extends Component {
-  constructor(props) {
-    super(props)
-    let order = props.order
-    this.state = {
-      lotId: order.lotId,
-      adspotId: order.adspotId,
-      programName: order.programName,
-      broadcasterId: order.broadcasterId,
-      genre: order.genre,
-      dayPart: order.dayPart,
-      targetGrp: order.targetGrp,
-      initialCpm: order.initialCpm,
-      bsrp: order.bsrp,
-      numberOfSpotsAvailable: order.numberOfSpots,
-      orderNumber: 0,
-      advertiserId: 'AdvertiserA',
-      adContractId: 0,
-      numberOfSpots: 0,
-    }
-
-  }
   render() {
     let { focused, columnWidths } = this.props
-    //let order = this.state
     let { order, update } = this.props
     columnWidths = [970] // TODO pass appropriate value to this component
     return <ExpansionPanel
@@ -97,66 +75,4 @@ export default class PlaceOrderForm extends Component {
       />
     </ExpansionPanel>
   }
-}
-
-const store = {
-  programs: [
-    'Dance Competition',
-    'Urban Family',
-    'Crime Show',
-    'Baseball',
-  ],
-  seasons: [
-    'S01',
-    'S02',
-    'S03',
-    'S04',
-    'S05',
-    'S06',
-    'S07',
-    'S08',
-    'S09',
-  ],
-  episodes: [
-    'E01',
-    'E02',
-    'E03',
-    'E04',
-    'E05',
-    'E06',
-    'E07',
-    'E08',
-    'E09',
-    'E10',
-    'E11',
-    'E12',
-    'E13',
-  ],
-  timeSlotDescriptions: [
-    'Prime',
-    'Morning',
-    'Afternoon',
-    'Evening',
-    'Weekend',
-  ],
-  daysOfWeek: [
-    'Monday',
-    'Tuesday',
-    'Wednesday',
-    'Thursday',
-    'Friday',
-    'Saturday',
-    'Sunday',
-  ],
-  genres: [
-    'Reality',
-    'Sitcom',
-    'Drama',
-    'Sports',
-  ],
-  demographics: [
-    'Women 18-54',
-    'Men 18-54',
-    'Men 21-49',
-  ],
 }
