@@ -3,33 +3,7 @@ import Dashboard from '../components/Dashboard'
 import request from 'superagent'
 import ExpansionList from 'react-md/lib/ExpansionPanels/ExpansionList'
 import OrderForm from '../components/OrderForm'
-
-function apiToUi(val) {
-  return {
-    id: val.adspotId,
-    program: val.programName,
-    broadcaster: val.broadcasterId,
-    genre: val.genre,
-    dayPart : val.dayPart,
-    timeSlotDescription: val.dayPart.split(' ')[0],
-    dayOfWeek: val.dayPart.split(' ')[1],
-    targetGRP: val.targetGrp,
-    targetDemographics: val.targetDemographics,
-    initialCPM: val.initialCpm,
-    bsrp: val.bsrp,
-    availableSpots: val.numberOfSpots
-  }
-}
-
-function uiToApi(val) {
-  return {
-    lotId: "" + val.lotId,
-    adspotId: '' + val.id,
-    advertiserId: val.advertiserId,
-    adContractId: val.adContractId,
-    numberOfSpots: '' + val.availableSpots
-  }
-}
+import Button from 'react-md/lib/Buttons/Button'
 
 export default class extends React.Component {
   static async getInitialProps() {
@@ -48,16 +22,57 @@ export default class extends React.Component {
   }
   constructor(props) {
     super(props)
-    let arr = props.summaries.map( summary => apiToUi(summary) )
+    let orders = props.orders.map( (order, i) => {
+      return {
+        ...order,
+        orderNumber: i + 1,
+        advertiserId: 'AdvertiserA',
+        adContractId: 0,
+        numberOfSpots: 0,
+      }
+    })
     this.state = {
-      orders: props.orders,
+      orders: orders,
     }
+  }
+  update = (orderNumber, update) => {
+    let arr = [ ...this.state.orders ]
+    let modOrder = null
+    let otherOrders = arr.filter( order => {
+      let result = false
+      if(order.orderNumber == orderNumber) modOrder = order
+      else result = true
+      return result
+    })
+    modOrder[update.key] = update.val
+    otherOrders.push(modOrder)
+    otherOrders.sort( (a, b) => a.orderNumber - b.orderNumber)
+    this.setState({ order: otherOrders })
+  }
+  submit = () => {
+    request
+      .post('//adsales-api-xrayyee.mybluemix.net/placeorders')
+      .type('form')
+      .send({
+        data: JSON.stringify({
+          agencyId: 'AgencyA',
+          broadcasterId: 'BroadcasterA',
+          spots: this.state.orders.map(order => JSON.stringify(order))
+        })
+      })
+      .end( (err, res) => {
+        if(err) console.log('err', err)
+        else console.log('success', res)
+      })
   }
   render() {
     return <Dashboard>
       <ExpansionList>
-         {this.state.orders.map( (order, i) => <OrderForm key={`order${i}`} order={ order }/>)}
+         {this.state.orders.map( (order, i) => <OrderForm key={`order${i}`} order={ order } update={ this.update }/>)}
       </ExpansionList>
+      <Button raised primary label='Submit' onClick={() => {
+        this.submit()
+      }}/>
     </Dashboard>
   }
 }

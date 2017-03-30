@@ -15,170 +15,85 @@ class OrderLabel extends PureComponent {
         }
       `}</style>
       <div>{order.lotId}</div>
-      <div>{order.id}</div>
+      <div>{order.adspotId}</div>
       <div style={{minWidth: 93}}>{order.targetDemographics}</div>
-      <div style={{minWidth: 130}}>{order.program}</div>
+      <div style={{minWidth: 130}}>{order.programName}</div>
     </div>
   }
 }
 
 export default class PlaceOrderForm extends Component {
-  constructor() {
-    super()
+  constructor(props) {
+    super(props)
+    let order = props.order
     this.state = {
-      id: null,
-      lotId: 1000,
-      program: null,
-      season: null,
-      episode: null,
-      genre: null,
-      timeSlotDescription: null,
-      dayOfWeek: null,
-      targetGRP: null,
-      targetDemographics: null,
-      initialCPM: null,
-      bsrp: null,
-      availableSpots: null,
-      reserveSpots: null,
+      lotId: order.lotId,
+      adspotId: order.adspotId,
+      programName: order.programName,
+      broadcasterId: order.broadcasterId,
+      genre: order.genre,
+      dayPart: order.dayPart,
+      targetGrp: order.targetGrp,
+      initialCpm: order.initialCpm,
+      bsrp: order.bsrp,
+      numberOfSpotsAvailable: order.numberOfSpots,
+      orderNumber: 0,
+      advertiserId: 'AdvertiserA',
+      adContractId: 0,
+      numberOfSpots: 0,
     }
+
   }
   render() {
-    let { order, focused, columnWidths } = this.props
-    console.log(order)
+    let { focused, columnWidths } = this.props
+    //let order = this.state
+    let { order, update } = this.props
     columnWidths = [970] // TODO pass appropriate value to this component
     return <ExpansionPanel
       focused={focused}
       columnWidths={columnWidths}
       label={<OrderLabel order={ order }/>}
     >
-      <TextField
-        id='text-field-id'
-        label='Spot ID'
-        defaultValue={order.id}
-        className='md-cell md-cell--bottom'
-        disabled
+      <div>{order.lotId}</div>
+      <div>{order.programName}</div>
+      <div>{order.broadcasterId}</div>
+      <div>{order.genre}</div>
+      <div>{order.dayPart}</div>
+      <div>{order.targetGrp}</div>
+      <div>{order.initialCpm}</div>
+      <div>{order.bsrp}</div>
+      <div>{order.numberOfSpots}</div>
+      <div>{order.orderNumber}</div>
+      <SelectField
+        id='select-field-advertisers'
+        defaultValue={order.advertiserId}
+        placeholder='Advertiser'
+        menuItems={['AdvertiserA', 'AdvertiserC']}
+        position={SelectField.Positions.BELOW}
+        className='md-cell'
+        onChange={val => {
+          update(order.orderNumber, {key: 'advertiserId', val: val})
+        }}
       />
       <TextField
-        id='text-field-lot-id'
-        label='Lot ID'
-        defaultValue={order.lotId}
+        id='text-field-ad-contract'
+        label='Ad Contract ID'
+        defaultValue={order.adContractId}
         className='md-cell md-cell--bottom'
         lineDirection='right'
-        onChange={val => this.setState({lotId: +val})}
-      />
-      <SelectField
-        id='select-field-programs'
-        defaultValue={order.program}
-        placeholder='Program'
-        menuItems={store.programs}
-        position={SelectField.Positions.BELOW}
-        className='md-cell'
-        onChange={val => this.setState({program: val})}
-      />
-      <SelectField
-        id='select-field-seasons'
-        defaultValue={order.season}
-        placeholder='Season'
-        menuItems={store.seasons}
-        position={SelectField.Positions.BELOW}
-        className='md-cell'
-        onChange={val => this.setState({season: val})}
-      />
-      <SelectField
-        id='select-field-episodes'
-        defaultValue={order.episode}
-        placeholder='Episode'
-        menuItems={store.episodes}
-        position={SelectField.Positions.BELOW}
-        className='md-cell'
-        onChange={val => this.setState({episode: val})}
-      />
-      <SelectField
-        id='select-field-genres'
-        defaultValue={order.genre}
-        placeholder='Genre'
-        menuItems={store.genres}
-        position={SelectField.Positions.BELOW}
-        className='md-cell'
-        onChange={val => this.setState({genre: val})}
-      />
-      <SelectField
-        id='select-field-time-slot-descriptions'
-        defaultValue={order.timeSlotDescription}
-        placeholder='Time Slot Description'
-        menuItems={store.timeSlotDescriptions}
-        position={SelectField.Positions.BELOW}
-        className='md-cell'
-        onChange={val => this.setState({timeSlotDescription: val})}
-      />
-      <SelectField
-        id='select-field-days-of-week'
-        defaultValue={order.dayOfWeek}
-        placeholder='Day of Week'
-        menuItems={store.daysOfWeek}
-        position={SelectField.Positions.BELOW}
-        className='md-cell'
-        onChange={val => this.setState({dayOfWeek: val})}
-      />
-      <Slider
-        discrete
-        id='discreteGRP'
-        defaultValue={order.targetGRP}
-        label='Target GRP'
-        max={5.00}
-        step={0.10}
-        discreteTicks={0.10}
-        valuePrecision={2}
-        onChange={val => this.setState({targetGRP: val})}
-      />
-      <SelectField
-        id='select-field-demographics'
-        defaultValue={order.targetDemographics}
-        placeholder='Target Demographics'
-        menuItems={store.demographics}
-        position={SelectField.Positions.BELOW}
-        className='md-cell'
-        onChange={val => this.setState({targetDemographics: val})}
-      />
-      <Slider
-        discrete
-        id='discreteCPM'
-        defaultValue={order.initialCPM}
-        label='Initial CPM'
-        max={5.00}
-        step={0.25}
-        discreteTicks={0.25}
-        valuePrecision={2}
-        onChange={val => this.setState({initialCPM: val})}
+        onChange={val => {
+          update(order.orderNumber, {key: 'adContractId', val: +val})
+        }}
       />
       <TextField
-        id='text-field-bsrp'
-        label='BSRP'
-        defaultValue={order.bsrp}
-        className='md-cell'
-        onChange={val => this.setState({bsrp: +val})}
-      />
-      <Slider
-        discrete
-        id='discreteAvailableSpots'
-        defaultValue={order.availableSpots}
-        label='Available Spots'
-        max={9}
-        step={1}
-        discreteTicks={1}
-        valuePrecision={1}
-        onChange={val => this.setState({availableSpots: val})}
-      />
-      <Slider
-        discrete
-        id='reserveSpots'
-        defaultValue={order.reserveSpots}
-        label='Reserve Spots'
-        max={9}
-        step={1}
-        discreteTicks={1}
-        valuePrecision={1}
-        onChange={val => this.setState({reserveSpots: val})}
+        id='text-field-number-of-spots'
+        label='Number of spots'
+        defaultValue={order.numberOfSpots}
+        className='md-cell md-cell--bottom'
+        lineDirection='right'
+        onChange={val => {
+          update(order.orderNumber, {key: 'numberOfSpots', val: +val})
+        }}
       />
     </ExpansionPanel>
   }
