@@ -5,6 +5,8 @@ import ExpansionList from 'react-md/lib/ExpansionPanels/ExpansionList'
 import SummaryForm from '../components/SummaryForm'
 import Button from 'react-md/lib/Buttons/Button'
 import api from '../api.json'
+import { Provider } from 'mobx-react'
+import { initStore } from '../store'
 
 function uiToApi(val) {
   return {
@@ -23,6 +25,18 @@ function uiToApi(val) {
 }
 
 export default class extends React.Component {
+  getInitialProps({ req }) {
+    const isServer = !!req
+    const store = initStore(isServer)
+    return { lastUpdate: store.lastUpdate, isServer }
+  }
+  constructor(props) {
+    super(props)
+    this.store = initStore(props.isServer, props.lastUpdate)
+    this.state = {
+      summaries: [],
+    }
+  }
   retrieve() {
     return api.summaries
   }
@@ -47,25 +61,21 @@ export default class extends React.Component {
         console.log('success', res)
       })
   }
-  constructor() {
-    super()
-    this.state = {
-      summaries: [],
-    }
-  }
   render() {
-    return <Dashboard>
-      <ExpansionList>
-         {this.state.summaries.map( (summary, i) => <SummaryForm key={`summary${i}`} summary={summary}/>)}
-      </ExpansionList>
-      <Button raised primary label='Retrieve' onClick={() => {
-        this.setState({
-          summaries: this.retrieve()
-        })
-      }}/>
-      <Button raised primary label='Ok' iconClassName='fa fa-hand-spock-o' onClick={() => {
-        this.submit(this.state.summaries)
-      }}/>
-    </Dashboard>
+    return <Provider store={this.store}>
+      <Dashboard>
+        <ExpansionList>
+           {this.state.summaries.map( (summary, i) => <SummaryForm key={`summary${i}`} summary={summary}/>)}
+        </ExpansionList>
+        <Button raised primary label='Retrieve' onClick={() => {
+          this.setState({
+            summaries: this.retrieve()
+          })
+        }}/>
+        <Button raised primary label='Ok' iconClassName='fa fa-hand-spock-o' onClick={() => {
+          this.submit(this.state.summaries)
+        }}/>
+      </Dashboard>
+    </Provider>
   }
 }

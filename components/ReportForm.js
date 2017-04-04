@@ -6,76 +6,76 @@ import ExpansionPanel from 'react-md/lib/ExpansionPanels/ExpansionPanel'
 import List from 'react-md/lib/Lists/List'
 import ListItem from 'react-md/lib/Lists/ListItem'
 
-class OrderLabel extends PureComponent {
+class ReportLabel extends PureComponent {
   render() {
-    let { order } = this.props
-    return <div className='order-label'>
+    let { spot } = this.props
+    return <div className='spot-label'>
       <style jsx>{`
-        .order-label {
+        .spot-label {
           display: flex;
           justify-content: space-between;
         }
       `}</style>
-      <div>{order.lotId}</div>
-      <div>{order.adspotId}</div>
-      <div style={{minWidth: 93}}>{order.targetDemographics}</div>
-      <div style={{minWidth: 130}}>{order.programName}</div>
+      <div>{spot.lotId}</div>
+      <div>{spot.adspotId}</div>
+      <div style={{minWidth: 93}}>{spot.targetDemographics}</div>
+      <div style={{minWidth: 130}}>{spot.programName}</div>
     </div>
   }
 }
 
-export default class OrderForm extends Component {
+export default class ReportForm extends Component {
   render() {
     let { focused, columnWidths } = this.props
-    let { order, update } = this.props
+    let { spot, update } = this.props
     columnWidths = [970] // TODO pass appropriate value to this component
     let items = [
-      order.lotId,
-      order.programName,
-      order.broadcasterId,
-      order.genre,
-      order.dayPart,
-      order.targetGrp,
-      order.initialCpm,
-      order.bsrp,
-      order.numberOfSpots,
-      order.orderNumber,
+      spot.lotId,
+      spot.programName,
+      spot.broadcasterId,
+      spot.genre,
+      spot.dayPart,
+      spot.targetGrp,
+      spot.initialCpm,
+      spot.bsrp,
+      spot.numberOfSpots,
+      spot.orderNumber,
     ].map( (text, i) => <ListItem key={i} primaryText={text}/> )
     return <ExpansionPanel
       focused={focused}
       columnWidths={columnWidths}
-      label={<OrderLabel order={ order }/>}
+      label={<ReportLabel spot={ spot }/>}
     >
       <List>{items}</List>
       <SelectField
         id='select-field-advertisers'
-        defaultValue={order.advertiserId}
+        defaultValue={spot.advertiserId}
         placeholder='Advertiser'
         menuItems={['AdvertiserA', 'AdvertiserC']}
         position={SelectField.Positions.BELOW}
         className='md-cell'
         onChange={val => {
-          update(order.orderNumber, {key: 'advertiserId', val: val})
+          update(spot.orderNumber, {key: 'advertiserId', val: val})
         }}
       />
       <TextField
         id='text-field-ad-contract'
         label='Ad Contract ID'
-        defaultValue={order.adContractId}
+        defaultValue={spot.adContractId}
         className='md-cell md-cell--bottom'
         lineDirection='right'
         onChange={val => {
-          update(order.orderNumber, {key: 'adContractId', val: +val})
+          update(spot.orderNumber, {key: 'adContractId', val: +val})
         }}
       />
       <TextField
         id='text-field-number-of-spots'
         label='Number of spots'
-        defaultValue={order.numberOfSpots}
+        defaultValue={spot.numberOfSpots}
         className='md-cell md-cell--bottom'
         lineDirection='right'
         onChange={val => {
-          update(order.orderNumber, {key: 'numberOfSpots', val: +val})
+          update(spot.orderNumber, {key: 'numberOfSpots', val: +val})
         }}
       />
     </ExpansionPanel>

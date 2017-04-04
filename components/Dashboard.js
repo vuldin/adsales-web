@@ -10,6 +10,8 @@ import FontIcon from 'react-md/lib/FontIcons'
 import ListItem from 'react-md/lib/Lists/ListItem'
 import NavigationDrawer from 'react-md/lib/NavigationDrawers'
 import SelectField from 'react-md/lib/SelectFields'
+import { inject, observer } from 'mobx-react'
+import Clock from './Clock'
 
 //const avatarSrc = 'https://cloud.githubusercontent.com/assets/13041/19686250/971bf7f8-9ac0-11e6-975c-188defd82df1.png'
 const avatarSrc = '/static/ibmlogo-grey-54x20.png'
@@ -27,12 +29,22 @@ class NavigationLink extends PureComponent {
   }
 }
 
+@inject('store') @observer
 export default class Dashboard extends PureComponent {
+  /*
   constructor() {
     super()
     this.state = {
       role: 'Broadcaster'
+      //role: this.props.store.username
     }
+  }
+  */
+  componentDidMount() {
+    this.props.store.start()
+  }
+  componentWillUnmount() {
+    this.props.store.stop()
   }
   render() {
     const closeButton = (
@@ -76,18 +88,18 @@ export default class Dashboard extends PureComponent {
           href='/place'
           leftIcon={<FontIcon>face</FontIcon>}
           tileClassName='md-list-tile--mini'
-          primaryText={'Place Order'}
+          primaryText={'Place Orders'}
         />,
       },
       {
-        roles: ['Ad Agency'],
+        roles: ['Broadcaster', 'Ad Agency'],
         component: <ListItem
           key='3'
           component={NavigationLink}
           href='/map'
           leftIcon={<FontIcon>perm_contact_calendar</FontIcon>}
           tileClassName='md-list-tile--mini'
-          primaryText={'Ad-to-spot mapping'}
+          primaryText={'Map Ads'}
         />,
       },
       {
@@ -125,7 +137,8 @@ export default class Dashboard extends PureComponent {
       <NavigationDrawer
         navItems={navItems.filter(navItem => {
           let result = false
-          if(navItem.roles.indexOf(this.state.role) > -1) result = true
+          //if(navItem.roles.indexOf(this.state.role) > -1) result = true
+          if(navItem.roles.indexOf(this.props.store.username) > -1) result = true
           return result
         }).map(navItem => navItem.component)}
         contentClassName='md-grid'
@@ -140,13 +153,14 @@ export default class Dashboard extends PureComponent {
           />,*/
           <SelectField
             id='account-switcher'
-            defaultValue={this.state.role}
+            defaultValue={this.props.store.username}
             menuItems={['Broadcaster', 'Ad Agency', 'Advertiser']}
             key='account-switcher'
             position={SelectField.Positions.BELOW}
             className='md-select-field--toolbar'
             onChange={val => {
-              this.setState({role: val})
+              //this.setState({role: val})
+              this.props.store.username = val
               Router.push('/')
             }}
           />
@@ -157,6 +171,7 @@ export default class Dashboard extends PureComponent {
         toolbarTitle='Ad Sales dashboard'
         toolbarActions={closeButton}
       >
+        <Clock lastUpdate={this.props.store.lastUpdate} light={this.props.store.light} />
         {this.props.children}
       </NavigationDrawer>
     </div>
