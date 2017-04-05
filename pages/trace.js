@@ -3,6 +3,8 @@ import Dashboard from '../components/Dashboard'
 import request from 'superagent'
 import ExpansionList from 'react-md/lib/ExpansionPanels/ExpansionList'
 import SummaryForm from '../components/SummaryForm'
+import { observer, Provider } from 'mobx-react'
+import { initStore } from '../store'
 
 function apiToUi(val) {
   return {
@@ -24,8 +26,11 @@ function apiToUi(val) {
   }
 }
 
+@observer
 export default class extends React.Component {
-  static async getInitialProps() {
+  static async getInitialProps({ req }) {
+    const isServer = !!req
+    const store = initStore(isServer)
     let summaries = await request
       .post('//adsales-api-xrayyee.mybluemix.net/querytraceadspots')
       .type('form')
@@ -33,17 +38,19 @@ export default class extends React.Component {
         data: JSON.stringify({userId: 'BroadcasterA'}),
       })
     summaries = JSON.parse(summaries.text)
-    return { summaries }
+    return { summaries, lastUpdate: store.lastUpdate, isServer }
   }
   constructor(props) {
     super(props)
     let arr = props.summaries.map( summary => apiToUi(summary) )
+    this.store = initStore(props.isServer, props.lastUpdate)
     this.state = {
       summaries: arr,
     }
   }
   render() {
     return <Dashboard>
+      <div>{this.store.username}</div>
       <ExpansionList>
          {this.state.summaries.map( (summary, i) => <SummaryForm key={`summary${i}`} summary={summary}/>)}
       </ExpansionList>

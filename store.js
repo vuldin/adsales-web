@@ -1,15 +1,34 @@
-import { action, observable, autorun } from 'mobx'
+import { action, observable } from 'mobx'
+//import { autorun } from 'mobx'
 
 let store = null
 
 class Store {
   @observable lastUpdate = 0
   @observable light = false
-  @observable username = 'Broadcaster'
+  users = [
+    {
+      name: 'BroadcasterA',
+      role: 'broadcaster',
+    },
+    {
+      name: 'AgencyA',
+      role: 'agency',
+    },
+    {
+      name: 'AdvertiserA',
+      role: 'advertiser',
+    },
+    {
+      name: 'AdvertiserC',
+      role: 'advertiser',
+    },
+  ]
+  @observable username = 'BroadcasterA'
 
   constructor (isServer, lastUpdate) {
     this.lastUpdate = lastUpdate
-    autorun( () => console.log(this.username))
+    //autorun( () => console.log(this.username))
   }
 
   @action start = () => {

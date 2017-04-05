@@ -4,35 +4,33 @@ import request from 'superagent'
 import ExpansionList from 'react-md/lib/ExpansionPanels/ExpansionList'
 import MapForm from '../components/MapForm'
 import Button from 'react-md/lib/Buttons/Button'
+import SelectField from 'react-md/lib/SelectFields'
+import { observer, Provider } from 'mobx-react'
+import { initStore } from '../store'
 
+@observer
 export default class extends React.Component {
-  static async getInitialProps() {
+  static async getInitialProps({ req }) {
+    const isServer = !!req
+    const store = initStore(isServer)
     let spots = await request
       .post('//adsales-api-xrayyee.mybluemix.net/queryadspotstomap')
       .type('form')
       .send({
         data: JSON.stringify({
-          agencyId: 'AgencyA',
+          agencyId: store.username,
         }),
       })
     spots = JSON.parse(spots.text)
     spots = spots.adspotsToMapData
-    return { spots }
+    return { spots, lastUpdate: store.lastUpdate, isServer }
   }
   constructor(props) {
     super(props)
-    /*
-    uniqueAdspotId: "1000_1",
-    broadcasterId:"BroadcasterA",
-    adContractId:1,
-    campaignName:"",
-    advertiserId:"AdvertiserA",
-    targetGrp:3.3,
-    targetDemographics:"Men 12 - 55",
-    initialCpm:3.44
-    */
+    this.store = initStore(props.isServer, props.lastUpdate)
     this.state = {
       array: props.spots,
+      broadcasterId: 'BroadcasterA',
     }
   }
   update = (id, update) => {
@@ -55,8 +53,12 @@ export default class extends React.Component {
       .type('form')
       .send({
         data: JSON.stringify({
+          /*
           agencyId: 'AgencyA',
           broadcasterId: 'BroadcasterA',
+          */
+          agencyId: this.store.username,
+          broadcasterId: this.state.broadcasterId,
           spots: this.state.array.map( obj => JSON.stringify(obj))
         })
       })
@@ -66,15 +68,24 @@ export default class extends React.Component {
       })
   }
   render() {
-    console.log('map render')
-    console.log(this.state.array)
-    return <Dashboard>
-      <ExpansionList>
-        {this.state.array.map( (obj, i) => <MapForm key={i} obj={obj} update={ this.update }/>)}
-      </ExpansionList>
-      <Button raised primary label='Submit' onClick={() => {
-        this.submit()
-      }}/>
-    </Dashboard>
+    return <Provider store={this.store}>
+      <Dashboard>
+        <ExpansionList>
+          {this.state.array.map( (obj, i) => <MapForm key={i} obj={obj} update={ this.update }/>)}
+        </ExpansionList>
+        <Button raised primary label='Submit' onClick={() => {
+          this.submit()
+        }}/>
+        <div>{this.store.username}</div>
+        <SelectField
+          id='select-field-broadcaster'
+          defaultValue='BroadcasterA'
+          placeholder='Broadcaster ID'
+          menuItems={['BroadcasterA', 'BroadcasterB', 'BroadcasterC']}
+          className='md-cell'
+          onChange={val => this.setState({broadcasterId: val})}
+        />
+      </Dashboard>
+    </Provider>
   }
 }

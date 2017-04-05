@@ -8,10 +8,11 @@ import Avatar from 'react-md/lib/Avatars'
 import Button from 'react-md/lib/Buttons/Button'
 import FontIcon from 'react-md/lib/FontIcons'
 import ListItem from 'react-md/lib/Lists/ListItem'
-import NavigationDrawer from 'react-md/lib/NavigationDrawers'
+//import NavigationDrawer from 'react-md/lib/NavigationDrawers'
+import Drawer from 'react-md/lib/Drawers'
+import Toolbar from 'react-md/lib/Toolbars'
 import SelectField from 'react-md/lib/SelectFields'
 import { inject, observer } from 'mobx-react'
-import Clock from './Clock'
 
 //const avatarSrc = 'https://cloud.githubusercontent.com/assets/13041/19686250/971bf7f8-9ac0-11e6-975c-188defd82df1.png'
 const avatarSrc = '/static/ibmlogo-grey-54x20.png'
@@ -32,11 +33,11 @@ class NavigationLink extends PureComponent {
 @inject('store') @observer
 export default class Dashboard extends PureComponent {
   /*
-  constructor() {
-    super()
+  constructor(props) {
+    super(props)
+    console.log('constructor')
     this.state = {
-      role: 'Broadcaster'
-      //role: this.props.store.username
+      username: props.store.username,
     }
   }
   */
@@ -47,19 +48,9 @@ export default class Dashboard extends PureComponent {
     this.props.store.stop()
   }
   render() {
-    const closeButton = (
-      <Button
-        icon
-        tooltipLabel='Close the interactive demo'
-        tooltipDelay={150}
-        tooltipPosition='left'
-      >
-        close
-      </Button>
-    )
     let navItems = [
       {
-        roles: ['Broadcaster', 'Ad Agency', 'Advertiser'],
+        roles: ['BroadcasterA', 'AgencyA', 'AdvertiserA', 'AdvertiserC'],
         component: <ListItem
           key='0'
           component={NavigationLink}
@@ -70,7 +61,7 @@ export default class Dashboard extends PureComponent {
         />,
       },
       {
-        roles: ['Broadcaster'],
+        roles: ['BroadcasterA'],
         component: <ListItem
           key='1'
           component={NavigationLink}
@@ -81,7 +72,7 @@ export default class Dashboard extends PureComponent {
         />,
       },
       {
-        roles: ['Broadcaster', 'Ad Agency'],
+        roles: ['AgencyA'],
         component: <ListItem
           key='2'
           component={NavigationLink}
@@ -92,7 +83,7 @@ export default class Dashboard extends PureComponent {
         />,
       },
       {
-        roles: ['Broadcaster', 'Ad Agency'],
+        roles: ['AgencyA'],
         component: <ListItem
           key='3'
           component={NavigationLink}
@@ -103,7 +94,7 @@ export default class Dashboard extends PureComponent {
         />,
       },
       {
-        roles: ['Broadcaster'],
+        roles: ['BroadcasterA'],
         component: <ListItem
           key='4'
           component={NavigationLink}
@@ -114,7 +105,7 @@ export default class Dashboard extends PureComponent {
         />,
       },
       {
-        roles: ['Broadcaster', 'Ad Agency', 'Advertiser'],
+        roles: ['BroadcasterA', 'AgencyA', 'AdvertiserA', 'AdvertiserC'],
         component: <ListItem
           key='5'
           component={NavigationLink}
@@ -126,6 +117,8 @@ export default class Dashboard extends PureComponent {
       },
     ]
 
+    let menuItems = this.props.store.users.map( user => user.name)
+    const header = <Toolbar className='md-divider-border md-divider-border--bottom'/>
     return <div>
       <Head>
         <link rel='stylesheet' href='/static/react-md.min.css' />
@@ -134,46 +127,42 @@ export default class Dashboard extends PureComponent {
         <script src='https://api.mapbox.com/mapbox-gl-js/v0.33.1/mapbox-gl.js'></script>
         <link href='https://api.mapbox.com/mapbox-gl-js/v0.33.1/mapbox-gl.css' rel='stylesheet' />
       </Head>
-      <NavigationDrawer
+      <Drawer
+        visible
+        position='left'
         navItems={navItems.filter(navItem => {
           let result = false
-          //if(navItem.roles.indexOf(this.state.role) > -1) result = true
           if(navItem.roles.indexOf(this.props.store.username) > -1) result = true
           return result
         }).map(navItem => navItem.component)}
-        contentClassName='md-grid'
-        drawerHeaderChildren={[
-          /*
-          <Avatar
-            key={avatarSrc}
-            src={avatarSrc}
-            role='presentation'
-            iconSized
-            style={{alignSelf: 'center', marginLeft: 16, marginRight: 16, flexShrink: 0}}
-          />,*/
-          <SelectField
-            id='account-switcher'
-            defaultValue={this.props.store.username}
-            menuItems={['Broadcaster', 'Ad Agency', 'Advertiser']}
-            key='account-switcher'
-            position={SelectField.Positions.BELOW}
-            className='md-select-field--toolbar'
-            onChange={val => {
-              //this.setState({role: val})
-              this.props.store.username = val
-              Router.push('/')
-            }}
-          />
-        ]}
-        mobileDrawerType={NavigationDrawer.DrawerTypes.TEMPORARY_MINI}
-        tabletDrawerType={NavigationDrawer.DrawerTypes.PERSISTENT_MINI}
-        desktopDrawerType={NavigationDrawer.DrawerTypes.PERSISTENT_MINI}
-        toolbarTitle='Ad Sales dashboard'
-        toolbarActions={closeButton}
+        type={Drawer.DrawerTypes.PERSISTENT}
+        header={header}
       >
-        <Clock lastUpdate={this.props.store.lastUpdate} light={this.props.store.light} />
+        <Toolbar
+          colored
+          fixed
+          title='Ad Sales'
+          titleStyle={{
+            width: '220px',
+          }}
+          titleMenu={
+            <SelectField
+              id='account-switcher'
+              label='User selection'
+              menuItems={['BroadcasterA', 'AgencyA', 'AdvertiserA', 'AdvertiserC']}
+              value={this.props.store.username}
+              onChange={val => {
+                this.props.store.username = val
+                Router.push('/')
+              }}
+            />
+          }
+        >
+        </Toolbar>
+      </Drawer>
+      <div className='md-drawer-relative md-toolbar-relative'>
         {this.props.children}
-      </NavigationDrawer>
+      </div>
     </div>
   }
 }

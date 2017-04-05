@@ -27,8 +27,6 @@ class MapLabel extends PureComponent {
 export default class MapForm extends Component {
   render() {
     let { obj, update, focused, columnWidths } = this.props
-    console.log('MapForm render')
-    console.log(obj)
     columnWidths = [970] // TODO pass appropriate value to this component
     let items = [
       obj.uniqueAdspotId,

@@ -4,7 +4,10 @@ import { Provider } from 'mobx-react'
 import { initStore } from '../store'
 import Dashboard from '../components/Dashboard'
 import map from '../lib/map'
+import { observer } from 'mobx-react'
+import Clock from '../components/Clock'
 
+@observer
 export default class Index extends React.Component {
   getInitialProps({ req }) {
     const isServer = !!req
@@ -29,6 +32,13 @@ export default class Index extends React.Component {
             height: '400px',
           }}
         ></div>
+        <div style={{
+          display: 'flex',
+          flexFlow: 'column',
+        }}>
+          <Clock lastUpdate={this.store.lastUpdate} light={this.store.light} />
+          <div>{this.store.username}</div>
+        </div>
       </Dashboard>
     </Provider>
   }
