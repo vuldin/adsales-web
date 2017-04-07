@@ -2,28 +2,31 @@ import React from 'react'
 import Dashboard from '../components/Dashboard'
 import request from 'superagent'
 import ExpansionList from 'react-md/lib/ExpansionPanels/ExpansionList'
-import SummaryForm from '../components/SummaryForm'
 import Button from 'react-md/lib/Buttons/Button'
+import TextField from 'react-md/lib/TextFields'
+import ReleaseForm from '../components/ReleaseForm'
 import api from '../api.json'
 import { Provider } from 'mobx-react'
 import { initStore } from '../store'
 
-function uiToApi(val) {
+function isNumeric(n) {
+  return !isNaN(parseFloat(n)) && isFinite(n);
+}
+function getNewSpot() {
   return {
-    adspotId: '' + val.id,
-    programName: val.program,
-    seasonEpisode: `${val.season}${val.episode}`,
-    genre: val.genre,
-    dayPart: `${val.timeSlotDescription} ${val.dayOfWeek}`,
-    targetGrp: '' + val.targetGRP,
-    targetDemographics: val.targetDemographics,
-    initialCpm: '' + val.initialCPM,
-    bsrp: '' + val.bsrp,
-    numberOfSpots: '' + val.availableSpots,
-    numberReservedSpots: '' + val.reserveSpots
+    adspotId: 0,
+    programName: '',
+    seasonEpisode: '',
+    genre: '',
+    dayPart: '',
+    targetGrp: 0.0,
+    targetDemographics: '',
+    initialCpm: 0.0,
+    bsrp: 0.0,
+    numberOfSpots: 0,
+    numberReservedSpots: 0,
   }
 }
-
 export default class extends React.Component {
   getInitialProps({ req }) {
     const isServer = !!req
@@ -34,20 +37,22 @@ export default class extends React.Component {
     super(props)
     this.store = initStore(props.isServer, props.lastUpdate)
     this.state = {
-      summaries: [],
+      broadcasterId: this.store.username,
+      lotId: 1000,
+      //spots: [getNewSpot()],
+      spots: [],
+      response: '',
     }
   }
-  retrieve() {
-    return api.summaries
+  retrieve = () => {
+    return api
   }
-  submit(vals) {
+  submit() {
     let result = {
-      broadcasterId: 'BroadcasterA',
-      lotId: '1000',
-      spots: vals.map( (val, i) => {
-        val.id = i + 1
-        let result = uiToApi(val)
-        return JSON.stringify(result)
+      broadcasterId: this.state.broadcasterId,
+      lotId: JSON.stringify(this.state.lotId),
+      spots: this.state.spots.map( (val, i) => {
+        return JSON.stringify(val)
       })
     }
     request
@@ -58,23 +63,73 @@ export default class extends React.Component {
       })
       .end( (err, res) => {
         if(err) console.log('err', err)
-        console.log('success', res)
+        else {
+          let response = JSON.parse(res.text)
+          response = response.uuid
+          console.log('success', response)
+          this.setState({ response: `success (${response})`})
+        }
       })
+  }
+  componentWillMount() {
+    this.store.navItems.map( obj => {
+      obj.component.href == this.props.url.pathname ? obj.component.active = true : obj.component.active = false
+    })
   }
   render() {
     return <Provider store={this.store}>
       <Dashboard>
+        <TextField
+          id='text-field-lot-id'
+          label='Lot ID'
+          value={this.state.lotId}
+          floating
+          fullWidth={false}
+          className='md-cell md-cell--top'
+          onChange={ val => {
+            if(isNumeric(val)) {
+              this.setState({ lotId: +val })
+            }
+          }}
+        />
+        <div className='header'>
+        <style jsx>{`
+          .header {
+            display: flex;
+            justify-content: space-between;
+            width: ${this.store.columnWidths}px;
+            padding-left: 24px;
+            padding-top: 10px;
+          }
+        `}</style>
+          <div style={{width: 50}}>Spot ID</div>
+          <div style={{width: 145}}>Program</div>
+          <div style={{width: 105}}>Target</div>
+          <div style={{width: 130}}>Spots available</div>
+        </div>
         <ExpansionList>
-           {this.state.summaries.map( (summary, i) => <SummaryForm key={`summary${i}`} summary={summary}/>)}
+           {this.state.spots.map( (spot, i) => <ReleaseForm key={i} obj={spot}/>)}
         </ExpansionList>
-        <Button raised primary label='Retrieve' onClick={() => {
-          this.setState({
-            summaries: this.retrieve()
-          })
-        }}/>
-        <Button raised primary label='Ok' iconClassName='fa fa-hand-spock-o' onClick={() => {
-          this.submit(this.state.summaries)
-        }}/>
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+        }}>
+          <Button raised primary label='Retrieve' onClick={() => {
+            let api = this.retrieve()
+            this.setState({
+              broadcasterId: api.broadcasterId,
+              lotId: api.lotId,
+              spots: api.spots,
+            })
+          }}/>
+          <Button raised primary label='Submit' onClick={() => {
+            this.submit(this.state)
+          }}/>
+          <div style={{
+            color: 'rgba(0,0,0,.54)',
+            marginLeft: '10px',
+          }}>{this.state.response}</div>
+        </div>
       </Dashboard>
     </Provider>
   }

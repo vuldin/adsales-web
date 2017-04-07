@@ -18,20 +18,26 @@ export default class Index extends React.Component {
     super(props)
     this.store = initStore(props.isServer, props.lastUpdate)
   }
-  componentDidMount() {
-    map(this.refs.map)
+  componentWillMount() {
+    this.store.navItems.map( obj => {
+      obj.component.href == this.props.url.pathname ? obj.component.active = true : obj.component.active = false
+    })
   }
-
+  componentDidMount() {
+    //map(this.refs.map)
+  }
   render() {
     return <Provider store={this.store}>
       <Dashboard>
+        {/*
         <div
           ref='map'
           style={{
             width: '700px',
             height: '400px',
           }}
-        ></div>
+        />
+        */}
         <div style={{
           display: 'flex',
           flexFlow: 'column',

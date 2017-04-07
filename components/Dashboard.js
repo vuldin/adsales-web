@@ -6,15 +6,13 @@ import { PureComponent } from 'react'
 
 import Avatar from 'react-md/lib/Avatars'
 import Button from 'react-md/lib/Buttons/Button'
-import FontIcon from 'react-md/lib/FontIcons'
-import ListItem from 'react-md/lib/Lists/ListItem'
-//import NavigationDrawer from 'react-md/lib/NavigationDrawers'
+//import FontIcon from 'react-md/lib/FontIcons'
 import Drawer from 'react-md/lib/Drawers'
 import Toolbar from 'react-md/lib/Toolbars'
 import SelectField from 'react-md/lib/SelectFields'
+
 import { inject, observer } from 'mobx-react'
 
-//const avatarSrc = 'https://cloud.githubusercontent.com/assets/13041/19686250/971bf7f8-9ac0-11e6-975c-188defd82df1.png'
 const avatarSrc = '/static/ibmlogo-grey-54x20.png'
 
 class NavigationLink extends PureComponent {
@@ -30,17 +28,19 @@ class NavigationLink extends PureComponent {
   }
 }
 
+/*
+let navIcons = [
+  'account_box',
+  'account_circle',
+  'face',
+  'perm_contact_calendar',
+  'perm_identity',
+  'record_voice_over',
+]
+*/
+
 @inject('store') @observer
 export default class Dashboard extends PureComponent {
-  /*
-  constructor(props) {
-    super(props)
-    console.log('constructor')
-    this.state = {
-      username: props.store.username,
-    }
-  }
-  */
   componentDidMount() {
     this.props.store.start()
   }
@@ -48,118 +48,61 @@ export default class Dashboard extends PureComponent {
     this.props.store.stop()
   }
   render() {
-    let navItems = [
-      {
-        roles: ['BroadcasterA', 'AgencyA', 'AdvertiserA', 'AdvertiserC'],
-        component: <ListItem
-          key='0'
-          component={NavigationLink}
-          href='/'
-          leftIcon={<FontIcon>account_box</FontIcon>}
-          tileClassName='md-list-tile--mini'
-          primaryText={'Home'}
-        />,
-      },
-      {
-        roles: ['BroadcasterA'],
-        component: <ListItem
-          key='1'
-          component={NavigationLink}
-          href='/release'
-          leftIcon={<FontIcon>account_circle</FontIcon>}
-          tileClassName='md-list-tile--mini'
-          primaryText={'Release Inventory'}
-        />,
-      },
-      {
-        roles: ['AgencyA'],
-        component: <ListItem
-          key='2'
-          component={NavigationLink}
-          href='/place'
-          leftIcon={<FontIcon>face</FontIcon>}
-          tileClassName='md-list-tile--mini'
-          primaryText={'Place Orders'}
-        />,
-      },
-      {
-        roles: ['AgencyA'],
-        component: <ListItem
-          key='3'
-          component={NavigationLink}
-          href='/map'
-          leftIcon={<FontIcon>perm_contact_calendar</FontIcon>}
-          tileClassName='md-list-tile--mini'
-          primaryText={'Map Ads'}
-        />,
-      },
-      {
-        roles: ['BroadcasterA'],
-        component: <ListItem
-          key='4'
-          component={NavigationLink}
-          href='/report'
-          leftIcon={<FontIcon>perm_identity</FontIcon>}
-          tileClassName='md-list-tile--mini'
-          primaryText={'Report Aired Ads'}
-        />,
-      },
-      {
-        roles: ['BroadcasterA', 'AgencyA', 'AdvertiserA', 'AdvertiserC'],
-        component: <ListItem
-          key='5'
-          component={NavigationLink}
-          href='/trace'
-          leftIcon={<FontIcon>record_voice_over</FontIcon>}
-          tileClassName='md-list-tile--mini'
-          primaryText={'Trace Ads'}
-        />,
-      },
-    ]
+    let { store } = this.props
+    let navItems = store.navItems.map( (navItem, i) => {
+      //navItem.component.leftIcon = <FontIcon>{navIcons[i]}</FontIcon>
+      navItem.component.component = NavigationLink
+      /*
+      navItem.component.onClick = () => {
+        store.navItems.map( obj => {
+          obj.component.key == navItem.component.key ? obj.component.active = true : obj.component.active = false
+        })
+      }
+      */
+      return navItem
+    })
 
-    let menuItems = this.props.store.users.map( user => user.name)
-    const header = <Toolbar className='md-divider-border md-divider-border--bottom'/>
+    let menuItems = store.users.map( user => user.name)
+    const drawerHeader = <Toolbar className='md-divider-border md-divider-border--bottom'>
+      <div className='md-title md-title--toolbar'>{store.toolbarTitle}</div>
+    </Toolbar>
     return <div>
       <Head>
         <link rel='stylesheet' href='/static/react-md.min.css' />
         <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto:300,400,500' />
         <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Material+Icons' />
+        <title>{store.title}</title>
         <script src='https://api.mapbox.com/mapbox-gl-js/v0.33.1/mapbox-gl.js'></script>
         <link href='https://api.mapbox.com/mapbox-gl-js/v0.33.1/mapbox-gl.css' rel='stylesheet' />
       </Head>
       <Drawer
-        visible
+        defaultVisible
         position='left'
         navItems={navItems.filter(navItem => {
           let result = false
-          if(navItem.roles.indexOf(this.props.store.username) > -1) result = true
+          if(navItem.roles.indexOf(store.username) > -1) result = true
           return result
         }).map(navItem => navItem.component)}
-        type={Drawer.DrawerTypes.PERSISTENT}
-        header={header}
+        header={drawerHeader}
       >
+      </Drawer>
         <Toolbar
           colored
           fixed
-          title='Ad Sales'
-          titleStyle={{
-            width: '220px',
-          }}
           titleMenu={
             <SelectField
               id='account-switcher'
               label='User selection'
               menuItems={['BroadcasterA', 'AgencyA', 'AdvertiserA', 'AdvertiserC']}
-              value={this.props.store.username}
+              value={store.username}
               onChange={val => {
-                this.props.store.username = val
+                store.username = val
                 Router.push('/')
               }}
             />
           }
-        >
-        </Toolbar>
-      </Drawer>
+          className='md-drawer-relative'
+        />
       <div className='md-drawer-relative md-toolbar-relative'>
         {this.props.children}
       </div>
