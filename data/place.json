@@ -1,26 +1,26 @@
  [
   {
     "orderNumber": "1",
-    "advertiserId": "123",
-    "adContractId": "123",
-    "numberOfSpots": "2"
+    "advertiserId": "AdvertiserA",
+    "adContractId": "1",
+    "numberOfSpotsToPurchase": "2"
   },
   {
-    "orderNumber": "1",
-    "advertiserId": "123",
-    "adContractId": "123",
-    "numberOfSpots": "2"
+    "orderNumber": "2",
+    "advertiserId": "AdvertiserA",
+    "adContractId": "1",
+    "numberOfSpotsToPurchase": "2"
   },
   {
-    "orderNumber": "1",
-    "advertiserId": "123",
-    "adContractId": "123",
-    "numberOfSpots": "2"
+    "orderNumber": "3",
+    "advertiserId": "AdvertiserC",
+    "adContractId": "2",
+    "numberOfSpotsToPurchase": "2"
   },
   {
-    "orderNumber": "1",
-    "advertiserId": "123",
-    "adContractId": "123",
-    "numberOfSpots": "2"
+    "orderNumber": "4",
+    "advertiserId": "AdvertiserC",
+    "adContractId": "2",
+    "numberOfSpotsToPurchase": "2"
   }
 ]
