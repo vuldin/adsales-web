@@ -84,8 +84,7 @@ class Store {
     'Urban Family',
     'Crime Show',
     'Baseball',
-    'Cars',
-    'Massive Crime Wave',
+    'Breaking News',
   ]
   timeSlotDescriptions = [
     'Prime',
@@ -108,16 +107,22 @@ class Store {
     'Sitcom',
     'Drama',
     'Sports',
-    'Action',
   ]
   demographics = [
-    'Women 12 - 55',
-    'Men 18 - 54',
-    'Men 20 - 40',
+    'Women 18-54',
+    'Men 18-54',
+    'Men 21-49',
+    'Men 20-60',
   ]
   advertisers = [
     'AdvertiserA',
     'AdvertiserC',
+  ]
+  campaignNames = [
+'Family Sedan',
+'Sport SUV',
+'Light Beer',
+'IPA',
   ]
 
   constructor (isServer, lastUpdate) {
