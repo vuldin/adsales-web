@@ -3,58 +3,123 @@ import SelectField from 'react-md/lib/SelectFields'
 import TextField from 'react-md/lib/TextFields'
 import Slider from 'react-md/lib/Sliders'
 import ExpansionPanel from 'react-md/lib/ExpansionPanels/ExpansionPanel'
-import List from 'react-md/lib/Lists/List'
-import ListItem from 'react-md/lib/Lists/ListItem'
+import Divider from 'react-md/lib/Dividers'
+import { inject, observer } from 'mobx-react'
 
-class MapLabel extends PureComponent {
+function isNumeric(n) {
+  return !isNaN(parseFloat(n)) && isFinite(n);
+}
+
+class Label extends PureComponent {
   render() {
     let { obj } = this.props
-    return <div className='map-label'>
+    return <div className='label'>
       <style jsx>{`
-        .map-label {
+        .label {
           display: flex;
           justify-content: space-between;
         }
       `}</style>
-      <div>{obj.lotId}</div>
-      <div>{obj.id}</div>
-      <div style={{minWidth: 93}}>{obj.targetDemographics}</div>
-      <div style={{minWidth: 130}}>{obj.program}</div>
+      <div style={{width: 50}}>{obj.adContractId}</div>
+      <div style={{width: 145}}>{obj.campaignName}</div>
+      <div style={{width: 105}}>{obj.advertiserId}</div>
+      <div style={{width: 130}}>{obj.targetGrp}</div>
+      <div style={{width: 130}}>{obj.targetDemographics}</div>
+      <div style={{width: 130}}>${obj.initialCpm}</div>
     </div>
   }
 }
 
-export default class MapForm extends Component {
+@inject('store') @observer
+export default class ReleaseForm extends Component {
+  constructor(props) {
+    super(props)
+    let { obj } = props
+    this.state = {
+      adspotId: `${obj.adContractId}`,
+      programName: obj.campaignName,
+      genre: obj.advertiserId,
+      targetGrp: `${obj.targetGrp}`,
+      targetDemographics: obj.targetDemographics,
+      initialCpm: `${obj.initialCpm}`,
+    }
+  }
+  componentDidMount() {
+    this.props.store.start()
+  }
+  componentWillUnmount() {
+    this.props.store.stop()
+  }
   render() {
-    let { obj, update, focused, columnWidths } = this.props
-    columnWidths = [970] // TODO pass appropriate value to this component
-    let items = [
-      obj.uniqueAdspotId,
-      obj.broadcasterId,
-      obj.adContractId,
-      obj.campaignName,
-      obj.advertiserId,
-      obj.targetGrp,
-      obj.targetDemographics,
-      obj.initialCpm,
-    ].map( (text, i) => <ListItem key={i} primaryText={text}/> )
+    let { obj, focused, columnWidths, store, update } = this.props
+    columnWidths = [store.columnWidths] // TODO pass appropriate value to this component
     return <ExpansionPanel
       focused={focused}
       columnWidths={columnWidths}
-      label={<MapLabel obj={obj}/>}
+      label={<Label obj={this.state}/>}
+      onExpandToggle={ expanded => {
+        if(!expanded) update(this.state)
+      }}
     >
-      <List>{items}</List>
+      <div style={{
+        display: 'flex',
+      }}>
+        <style jsx>{`
+          div {
+            flex: 1;
+            margin-bottom: 5px;
+          }
+          label {
+            font-size: 12px;
+            color: rgba(0,0,0,.54);
+          }
+        `}</style>
+        <div>
+          <label>{'Contract ID'}</label>
+          <div>{this.state.adContractId}</div>
+        </div>
+        <div>
+          <label>{'Advertiser ID'}</label>
+          <div>{this.state.advertiserId}</div>
+        </div>
+        <div>
+          <label>{'Target GRP'}</label>
+          <div>{this.state.targetGrp}</div>
+        </div>
+      </div>
+      <div style={{
+        display: 'flex',
+      }}>
+        <style jsx>{`
+          div {
+            flex: 1;
+            margin-bottom: 5px;
+          }
+          label {
+            font-size: 12px;
+            color: rgba(0,0,0,.54);
+          }
+        `}</style>
+        <div>
+          <label>{'Target Demographic'}</label>
+          <div>{this.state.targetDemographics}</div>
+        </div>
+        <div>
+          <label>{'Initial CPM'}</label>
+          <div>${this.state.initialCpm}</div>
+        </div>
+      </div>
+      <Divider/>
       <TextField
         id='text-field-campaign'
-        label='Campaign'
-        defaultValue={obj.campaign}
-        className='md-cell md-cell--bottom'
-      />
-      <TextField
-        id='text-field-advertiser'
-        label='Advertiser'
-        defaultValue={obj.advertiser}
-        className='md-cell md-cell--bottom'
+        label='Campaign Name'
+        value={this.state.campaignName}
+        floating
+        fullWidth={false}
+        className='md-cell md-cell--top'
+        onChange={ val => {
+          this.setState({ campaignName: val })
+        }}
       />
     </ExpansionPanel>
   }

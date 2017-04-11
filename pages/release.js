@@ -38,8 +38,7 @@ export default class extends React.Component {
     this.store = initStore(props.isServer, props.lastUpdate)
     this.state = {
       broadcasterId: this.store.username,
-      lotId: 1000,
-      //spots: [getNewSpot()],
+      lotId: '1000',
       spots: [],
       response: '',
     }
@@ -47,10 +46,17 @@ export default class extends React.Component {
   retrieve = () => {
     return api
   }
+  updateSpots = spot => {
+    let arr = this.state.spots.map( oldspot => {
+      if(oldspot.adspotId == spot.adspotId) return spot
+      else return oldspot
+    })
+    this.setState({spots: arr})
+  }
   submit() {
-    let result = {
+    let data = {
       broadcasterId: this.state.broadcasterId,
-      lotId: JSON.stringify(this.state.lotId),
+      lotId: this.state.lotId,
       spots: this.state.spots.map( (val, i) => {
         return JSON.stringify(val)
       })
@@ -59,14 +65,13 @@ export default class extends React.Component {
       .post('//adsales-api-xrayyee.mybluemix.net/releaseinventory')
       .type('form')
       .send({
-        data: JSON.stringify(result)
+        data: JSON.stringify(data)
       })
       .end( (err, res) => {
         if(err) console.log('err', err)
         else {
           let response = JSON.parse(res.text)
           response = response.uuid
-          console.log('success', response)
           this.setState({ response: `success (${response})`})
         }
       })
@@ -105,10 +110,11 @@ export default class extends React.Component {
           <div style={{width: 50}}>Spot ID</div>
           <div style={{width: 145}}>Program</div>
           <div style={{width: 105}}>Target</div>
-          <div style={{width: 130}}>Spots available</div>
+          <div style={{width: 130}}>Reserve Spots</div>
+          <div style={{width: 130}}>Available Spots</div>
         </div>
         <ExpansionList>
-           {this.state.spots.map( (spot, i) => <ReleaseForm key={i} obj={spot}/>)}
+           {this.state.spots.map( (spot, i) => <ReleaseForm key={i} obj={spot} update={this.updateSpots}/>)}
         </ExpansionList>
         <div style={{
           display: 'flex',

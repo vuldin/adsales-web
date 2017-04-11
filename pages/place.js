@@ -35,32 +35,49 @@ export default class extends React.Component {
     super(props)
     this.store = initStore(props.isServer, props.lastUpdate)
     this.state = {
-      broadcasterId: this.store.username,
-      lotId: 1000,
-      spots: props.orders,
+      agencyId: this.store.username,
+      broadcasterId: 'BroadcasterA',
+      lotId: '1000',
+      spots: props.orders == null ? [] : props.orders,
       response: '',
     }
   }
   retrieve = () => {
     return api
   }
+  updateSpots = spot => {
+    let arr = this.state.spots.map( oldspot => {
+      if(oldspot.adspotId == spot.adspotId) return spot
+      else return oldspot
+    })
+    this.setState({spots: arr})
+  }
   submit() {
-    let result = {
+    let data = {
+      agencyId: this.state.agencyId,
       broadcasterId: this.state.broadcasterId,
-      lotId: JSON.stringify(this.state.lotId),
       spots: this.state.spots.map( (val, i) => {
         return JSON.stringify(val)
       })
     }
+    console.log(data)
+    /*
+    {"agencyId":"AgencyA","broadcasterId":"BroadcasterA","spots":["{\"lotId\":\"1000\",\"adspotId\":\"1\",\"orderNumber\":\"1\",\"advertiserId\":\"AdvertiserA\",\"adContractId\":\"1\",\"numberOfSpots\":\"2\"}","{\"lotId\":\"1000\",\"adspotId\":\"2\",\"orderNumber\":\"1\",\"advertiserId\":\"AdvertiserC\",\"adContractId\":\"1\",\"numberOfSpots\":\"1\"}"]}
+    {"agencyId":"AgencyA","broadcasterId":"BroadcasterA","spots":["{\"lotId\":\"1000\",\"adspotId\":\"1\",\"programName\":\"Massive Crime Wave\",\"genre\":\"Drama\",\"dayPart\":\"Prime Wednesday\",\"targetGrp\":\"3.3\",\"targetDemographics\":\"Women 12 - 55\",\"initialCpm\":\"3.44\",\"bsrp\":\"1300.6\",\"numberOfSpots\":\"2\",\"orderNumber\":123,\"advertiserId\":\"AdvertiserC\",\"adContractId\":\"123\",\"reserveSpots\":1}","{\"lotId\":\"1000\",\"adspotId\":\"2\",\"programName\":\"Cars\",\"genre\":\"Action\",\"dayPart\":\"Prime Tuesday\",\"targetGrp\":\"1.3\",\"targetDemographics\":\"Men 20 - 40\",\"initialCpm\":\"3.34\",\"bsrp\":\"100.6\",\"numberOfSpots\":\"2\",\"orderNumber\":123,\"advertiserId\":\"AdvertiserC\",\"adContractId\":\"123\",\"reserveSpots\":1}"]}
+    */
     request
-      .post('//adsales-api-xrayyee.mybluemix.net/releaseinventory')
+      .post('//adsales-api-xrayyee.mybluemix.net/placeorders')
       .type('form')
       .send({
-        data: JSON.stringify(result)
+        data: JSON.stringify(data)
       })
       .end( (err, res) => {
         if(err) console.log('err', err)
-        console.log('success', res.text)
+        else {
+          let response = JSON.parse(res.text)
+          response = response.uuid
+          this.setState({ response: `success (${response})`})
+        }
       })
   }
   componentWillMount() {
@@ -84,10 +101,12 @@ export default class extends React.Component {
           <div style={{width: 50}}>Spot ID</div>
           <div style={{width: 145}}>Program</div>
           <div style={{width: 105}}>Target</div>
-          <div style={{width: 130}}>Spots available</div>
+          <div style={{width: 130}}>Available Spots</div>
+          <div style={{width: 130}}>Advertiser ID</div>
+          <div style={{width: 130}}>Reserve Spots</div>
         </div>
         <ExpansionList>
-           {this.state.spots.map( (spot, i) => <PlaceForm key={i} obj={spot}/>)}
+           {this.state.spots.map( (spot, i) => <PlaceForm key={i} obj={spot} update={this.updateSpots}/>)}
         </ExpansionList>
         <div style={{
           display: 'flex',

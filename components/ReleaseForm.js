@@ -22,7 +22,8 @@ class Label extends PureComponent {
       <div style={{width: 50}}>{obj.adspotId}</div>
       <div style={{width: 145}}>{obj.programName}</div>
       <div style={{width: 105}}>{obj.targetDemographics}</div>
-      <div style={{width: 130}}>{obj.numberReservedSpots} out of {obj.numberOfSpots} available</div>
+      <div style={{width: 130}}>{obj.numberReservedSpots}</div>
+      <div style={{width: 130}}>{obj.numberOfSpots}</div>
     </div>
   }
 }
@@ -55,23 +56,28 @@ export default class ReleaseForm extends Component {
     this.props.store.stop()
   }
   render() {
-    let { obj, focused, columnWidths, store } = this.props
+    let { obj, focused, columnWidths, store, update } = this.props
     columnWidths = [store.columnWidths] // TODO pass appropriate value to this component
     let reserveSlider = <Slider
       discrete
       id='Reserves'
-      value={this.state.numberReservedSpots}
+      value={+this.state.numberReservedSpots}
       label={`Reserved Spots: ${this.state.numberReservedSpots}`}
       max={10}
       step={1}
       discreteTicks={1}
       valuePrecision={1}
-      onChange={ val => this.setState({ numberReservedSpots: +val }) }
+      onChange={ val => {
+        this.setState({ numberReservedSpots: `${val}` })
+      }}
     />
     return <ExpansionPanel
       focused={focused}
       columnWidths={columnWidths}
       label={<Label obj={this.state}/>}
+      onExpandToggle={ expanded => {
+        if(!expanded) update(this.state)
+      }}
     >
       <TextField
         id='text-field-id'
@@ -81,7 +87,7 @@ export default class ReleaseForm extends Component {
         fullWidth={false}
         className='md-cell md-cell--top'
         onChange={ val => {
-          if(isNumeric(val)) this.setState({ adspotId: +val })
+          if(isNumeric(val)) this.setState({ adspotId: val })
         }}
       />
       <SelectField
@@ -140,14 +146,14 @@ export default class ReleaseForm extends Component {
       <Slider
         discrete
         id='slider-target-grp'
-        defaultValue={this.state.targetGrp}
+        defaultValue={+this.state.targetGrp}
         label={`Target GRP: ${this.state.targetGrp}`}
         max={5.00}
         step={0.1}
         discreteTicks={0.1}
         valuePrecision={1}
         onChange={ val => {
-          this.setState({ targetGrp: +val.toFixed(2) })
+          this.setState({ targetGrp: `${val.toFixed(2)}` })
         }}
       />
       <SelectField
@@ -162,7 +168,7 @@ export default class ReleaseForm extends Component {
       <Slider
         discrete
         id='slider-initial-cpm'
-        defaultValue={this.state.initialCpm}
+        defaultValue={+this.state.initialCpm}
         label='Initial CPM'
         label={`Initial CPM: ${this.state.initialCpm}`}
         max={5.00}
@@ -170,7 +176,7 @@ export default class ReleaseForm extends Component {
         discreteTicks={0.01}
         valuePrecision={2}
         onChange={ val => {
-          this.setState({ initialCpm: +val.toFixed(3) })
+          this.setState({ initialCpm: `${val.toFixed(3)}` })
         }}
       />
       <TextField
@@ -182,21 +188,21 @@ export default class ReleaseForm extends Component {
         className='md-cell md-cell--top'
         onChange={ val => {
           if(isNumeric(val)) {
-            this.setState({ bsrp: +val.toFixed(2) })
+            this.setState({ bsrp: val.toFixed(2) })
           }
         }}
       />
       <Slider
         discrete
         id='slider-number-spots'
-        defaultValue={this.state.numberOfSpots}
+        defaultValue={+this.state.numberOfSpots}
         label={`Available Spots: ${this.state.numberOfSpots}`}
         max={9}
         step={1}
         discreteTicks={1}
         valuePrecision={1}
         onChange={ val => {
-          this.setState({ numberOfSpots: +val })
+          this.setState({ numberOfSpots: `${val}` })
           //reserveSlider.forceUpdate( () => console.log('updated'))
         }}
       />
