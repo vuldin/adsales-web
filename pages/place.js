@@ -42,8 +42,7 @@ export default class extends React.Component {
       response: '',
     }
   }
-  retrieve = () => {
-    console.log('retrieve')
+  populate = () => {
     return placeData
   }
   updateSpots = spot => {
@@ -61,11 +60,6 @@ export default class extends React.Component {
         return JSON.stringify(val)
       })
     }
-    console.log(data)
-    /*
-    {"agencyId":"AgencyA","broadcasterId":"BroadcasterA","spots":["{\"lotId\":\"1000\",\"adspotId\":\"1\",\"orderNumber\":\"1\",\"advertiserId\":\"AdvertiserA\",\"adContractId\":\"1\",\"numberOfSpots\":\"2\"}","{\"lotId\":\"1000\",\"adspotId\":\"2\",\"orderNumber\":\"1\",\"advertiserId\":\"AdvertiserC\",\"adContractId\":\"1\",\"numberOfSpots\":\"1\"}"]}
-    {"agencyId":"AgencyA","broadcasterId":"BroadcasterA","spots":["{\"lotId\":\"1000\",\"adspotId\":\"1\",\"programName\":\"Massive Crime Wave\",\"genre\":\"Drama\",\"dayPart\":\"Prime Wednesday\",\"targetGrp\":\"3.3\",\"targetDemographics\":\"Women 12 - 55\",\"initialCpm\":\"3.44\",\"bsrp\":\"1300.6\",\"numberOfSpots\":\"2\",\"orderNumber\":123,\"advertiserId\":\"AdvertiserC\",\"adContractId\":\"123\",\"reserveSpots\":1}","{\"lotId\":\"1000\",\"adspotId\":\"2\",\"programName\":\"Cars\",\"genre\":\"Action\",\"dayPart\":\"Prime Tuesday\",\"targetGrp\":\"1.3\",\"targetDemographics\":\"Men 20 - 40\",\"initialCpm\":\"3.34\",\"bsrp\":\"100.6\",\"numberOfSpots\":\"2\",\"orderNumber\":123,\"advertiserId\":\"AdvertiserC\",\"adContractId\":\"123\",\"reserveSpots\":1}"]}
-    */
     request
       .post('//adsales-api-xrayyee.mybluemix.net/placeorders')
       .type('form')
@@ -114,14 +108,18 @@ export default class extends React.Component {
           alignItems: 'center',
         }}>
           <Button raised primary label='Populate' onClick={() => {
-            let data = this.retrieve()
-            /*
-            this.setState({
-              broadcasterId: api.broadcasterId,
-              lotId: api.lotId,
-              spots: api.spots,
+            let data = this.populate()
+            let arr = this.state.spots.map( (spot, i) => {
+              spot.orderNumber = data[i].orderNumber
+              spot.advertiserId = data[i].advertiserId
+              spot.adContractId = data[i].adContractId
+              spot.numberOfSpotsToPurchase = data[i].numberOfSpotsToPurchase
+              return spot
             })
-            */
+            console.log(arr)
+            this.setState({
+              spots: arr,
+            })
           }}/>
           <Button raised primary label='Submit' onClick={() => {
             this.submit(this.state)

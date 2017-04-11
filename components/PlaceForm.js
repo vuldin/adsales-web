@@ -25,7 +25,7 @@ class Label extends PureComponent {
       <div style={{width: 105}}>{obj.targetDemographics}</div>
       <div style={{width: 130}}>{obj.numberOfSpots}</div>
       <div style={{width: 130}}>{obj.advertiserId}</div>
-      <div style={{width: 130}}>{obj.reserveSpots}</div>
+      <div style={{width: 130}}>{obj.numberOfSpotsToPurchase}</div>
     </div>
   }
 }
@@ -46,10 +46,10 @@ export default class ReleaseForm extends Component {
       initialCpm: `${obj.initialCpm}`,
       bsrp: `${obj.bsrp}`,
       numberOfSpots: `${obj.numberOfSpots}`,
-      orderNumber: `${0}`,
-      advertiserId: 'AdvertiserA',
-      adContractId: `${0}`,
-      reserveSpots: `${0}`,
+      orderNumber: ``,
+      advertiserId: '',
+      adContractId: ``,
+      numberOfSpotsToPurchase: ``,
     }
   }
   componentDidMount() {
@@ -186,13 +186,13 @@ export default class ReleaseForm extends Component {
       <Slider
         discrete
         id='slider-reserve-spots'
-        defaultValue={+this.state.reserveSpots}
-        label={`Reserve Spots: ${this.state.reserveSpots}`}
+        defaultValue={+this.state.numberOfSpotsToPurchase}
+        label={`Number of spots to purchase: ${this.state.numberOfSpotsToPurchase}`}
         max={+this.state.numberOfSpots}
         step={1}
         discreteTicks={1}
         onChange={ val => {
-          this.setState({ reserveSpots: val })
+          this.setState({ numberOfSpotsToPurchase: val })
         }}
       />
     </ExpansionPanel>
