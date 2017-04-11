@@ -1,0 +1,26 @@
+ [
+  {
+    "orderNumber": "1",
+    "advertiserId": "123",
+    "adContractId": "123",
+    "numberOfSpots": "2"
+  },
+  {
+    "orderNumber": "1",
+    "advertiserId": "123",
+    "adContractId": "123",
+    "numberOfSpots": "2"
+  },
+  {
+    "orderNumber": "1",
+    "advertiserId": "123",
+    "adContractId": "123",
+    "numberOfSpots": "2"
+  },
+  {
+    "orderNumber": "1",
+    "advertiserId": "123",
+    "adContractId": "123",
+    "numberOfSpots": "2"
+  }
+]

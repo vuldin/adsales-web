@@ -5,7 +5,7 @@ import ExpansionList from 'react-md/lib/ExpansionPanels/ExpansionList'
 import Button from 'react-md/lib/Buttons/Button'
 import TextField from 'react-md/lib/TextFields'
 import ReleaseForm from '../components/ReleaseForm'
-import api from '../api.json'
+import releaseData from '../data/release.json'
 import { Provider } from 'mobx-react'
 import { initStore } from '../store'
 
@@ -44,7 +44,7 @@ export default class extends React.Component {
     }
   }
   retrieve = () => {
-    return api
+    return releaseData
   }
   updateSpots = spot => {
     let arr = this.state.spots.map( oldspot => {
@@ -120,7 +120,7 @@ export default class extends React.Component {
           display: 'flex',
           alignItems: 'center',
         }}>
-          <Button raised primary label='Retrieve' onClick={() => {
+          <Button raised primary label='Populate' onClick={() => {
             let api = this.retrieve()
             this.setState({
               broadcasterId: api.broadcasterId,

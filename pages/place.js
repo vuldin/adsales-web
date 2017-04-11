@@ -5,7 +5,7 @@ import ExpansionList from 'react-md/lib/ExpansionPanels/ExpansionList'
 import Button from 'react-md/lib/Buttons/Button'
 import TextField from 'react-md/lib/TextFields'
 import PlaceForm from '../components/PlaceForm'
-import api from '../api.json'
+import placeData from '../data/place.json'
 import { Provider } from 'mobx-react'
 import { initStore } from '../store'
 
@@ -43,7 +43,8 @@ export default class extends React.Component {
     }
   }
   retrieve = () => {
-    return api
+    console.log('retrieve')
+    return placeData
   }
   updateSpots = spot => {
     let arr = this.state.spots.map( oldspot => {
@@ -112,6 +113,16 @@ export default class extends React.Component {
           display: 'flex',
           alignItems: 'center',
         }}>
+          <Button raised primary label='Populate' onClick={() => {
+            let data = this.retrieve()
+            /*
+            this.setState({
+              broadcasterId: api.broadcasterId,
+              lotId: api.lotId,
+              spots: api.spots,
+            })
+            */
+          }}/>
           <Button raised primary label='Submit' onClick={() => {
             this.submit(this.state)
           }}/>
