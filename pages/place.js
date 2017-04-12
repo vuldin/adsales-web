@@ -8,7 +8,6 @@ import PlaceForm from '../components/PlaceForm'
 import placeData from '../data/place.json'
 import { Provider } from 'mobx-react'
 import { initStore } from '../store'
-import { toJS } from 'mobx'
 
 function isNumeric(n) {
   return !isNaN(parseFloat(n)) && isFinite(n);
@@ -23,7 +22,7 @@ export default class extends React.Component {
     }
     data = JSON.stringify(data)
     let orders = await request // TODO move to a retrieve function so broadcasterId can be chosen
-      .post('//adsales-api-xrayyee.mybluemix.net/queryplaceorders')
+      .post(`//${store.apiServer}/queryplaceorders`)
       .type('form')
       .send({
         data: data,
@@ -70,7 +69,7 @@ export default class extends React.Component {
       })
     }
     request
-      .post('//adsales-api-xrayyee.mybluemix.net/placeorders')
+      .post(`//${this.store.apiServer}/placeorders`)
       .type('form')
       .send({
         data: JSON.stringify(data)

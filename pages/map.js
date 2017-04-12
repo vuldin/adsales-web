@@ -22,7 +22,7 @@ export default class extends React.Component {
     }
     data = JSON.stringify(data)
     let orders = await request // TODO move to a retrieve function so broadcasterId can be chosen
-      .post('//adsales-api-xrayyee.mybluemix.net/queryadspotstomap')
+      .post(`//${store.apiServer}/queryadspotstomap`)
       .type('form')
       .send({
         data: data,
@@ -49,15 +49,21 @@ export default class extends React.Component {
     return mapData
   }
   submit(spots) {
+    let arr = spots.map( spot => {
+      spot.adContractId = `${spot.adContractId}`
+      spot.initialCpm = `${spot.initialCpm}`
+      spot.targetGrp = `${spot.targetGrp}`
+      return spot
+    })
     let data = {
       agencyId: this.state.agencyId,
       broadcasterId: this.state.broadcasterId,
-      spots: spots.map( (val, i) => {
+      spots: arr.map( (val, i) => {
         return JSON.stringify(val)
       })
     }
     request
-      .post('//adsales-api-xrayyee.mybluemix.net/mapadspots')
+      .post(`//${this.store.apiServer}/mapadspots`)
       .type('form')
       .send({
         data: JSON.stringify(data)

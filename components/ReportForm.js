@@ -109,7 +109,7 @@ export default class ReleaseForm extends Component {
         </div>
         <div>
           <label>{'Target Demographic'}</label>
-          <div>${obj.targetDemographics}</div>
+          <div>{obj.targetDemographics}</div>
         </div>
       </div>
       <Divider/>
@@ -153,7 +153,7 @@ export default class ReleaseForm extends Component {
       />
       <SelectField
         id='select-field-actual-demographic'
-        value={obj.actualDemographic}
+        value={obj.actualDemographics}
         label='Actual Demographics'
         menuItems={store.demographics}
         position={SelectField.Positions.BELOW}
@@ -172,7 +172,7 @@ export default class ReleaseForm extends Component {
       <TextField
         id='text-field-makeup-adspot-id'
         label='Makeup Adspot ID'
-        value={obj.makeupAdspotId}
+        value={obj.makupAdspotId}
         floating
         fullWidth={false}
         className='md-cell md-cell--top'
@@ -180,7 +180,7 @@ export default class ReleaseForm extends Component {
           if(isNumeric(val)) {
             let arr = store.reportObjs.map( oldspot => {
               if(oldspot.uniqueAdspotId == obj.uniqueAdspotId) {
-                obj.makeupAdspotId = val
+                obj.makupAdspotId = val
                 return obj
               }
               else return oldspot

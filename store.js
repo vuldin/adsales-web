@@ -78,7 +78,8 @@ class Store {
       },
     },
   ]
-  columnWidths = 970
+  //columnWidths = 970
+  columnWidths = 1200
   programs = [
     'Dance Competition',
     'Urban Family',
@@ -130,12 +131,16 @@ class Store {
   ]
   @observable reportObjs = [
   ]
+  @observable traceObjs = [
+  ]
+  @observable traceIndex = -1
+  apiServer = 'adsales-api-xrayyee-5.mybluemix.net'
 
   constructor (isServer, lastUpdate) {
     this.lastUpdate = lastUpdate
     autorun( () => {
-      console.log('autorun')
-      console.log(toJS(this.reportObjs))
+      //console.log('autorun')
+      //console.log(toJS(this.traceIndex))
     })
   }
 

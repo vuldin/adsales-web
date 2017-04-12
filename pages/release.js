@@ -62,7 +62,7 @@ export default class extends React.Component {
       })
     }
     request
-      .post('//adsales-api-xrayyee.mybluemix.net/releaseinventory')
+      .post(`//${this.store.apiServer}/releaseinventory`)
       .type('form')
       .send({
         data: JSON.stringify(data)
