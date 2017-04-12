@@ -10,9 +10,17 @@ function isNumeric(n) {
   return !isNaN(parseFloat(n)) && isFinite(n);
 }
 
+@inject('store') @observer
 class Label extends PureComponent {
+  componentDidMount() {
+    this.props.store.start()
+  }
+  componentWillUnmount() {
+    this.props.store.stop()
+  }
   render() {
-    let { obj } = this.props
+    let { store, index } = this.props
+    let obj = store.placeObjs[index]
     return <div className='label'>
       <style jsx>{`
         .label {
@@ -25,33 +33,13 @@ class Label extends PureComponent {
       <div style={{width: 105}}>{obj.targetDemographics}</div>
       <div style={{width: 130}}>{obj.numberOfSpots}</div>
       <div style={{width: 130}}>{obj.advertiserId}</div>
-      <div style={{width: 130}}>{obj.numberOfSpotsToPurchase}</div>
+      <div style={{width: 200}}>{obj.numberOfSpotsToPurchase}</div>
     </div>
   }
 }
 
 @inject('store') @observer
 export default class ReleaseForm extends Component {
-  constructor(props) {
-    super(props)
-    let { obj } = props
-    this.state = {
-      lotId: `${obj.lotId}`,
-      adspotId: `${obj.adspotId}`,
-      programName: obj.programName,
-      genre: obj.genre,
-      dayPart: obj.dayPart,
-      targetGrp: `${obj.targetGrp}`,
-      targetDemographics: obj.targetDemographics,
-      initialCpm: `${obj.initialCpm}`,
-      bsrp: `${obj.bsrp}`,
-      numberOfSpots: `${obj.numberOfSpots}`,
-      orderNumber: ``,
-      advertiserId: '',
-      adContractId: ``,
-      numberOfSpotsToPurchase: ``,
-    }
-  }
   componentDidMount() {
     this.props.store.start()
   }
@@ -59,15 +47,13 @@ export default class ReleaseForm extends Component {
     this.props.store.stop()
   }
   render() {
-    let { obj, focused, columnWidths, store, update } = this.props
+    let { focused, columnWidths, store, index } = this.props
+    let obj = store.placeObjs[index]
     columnWidths = [store.columnWidths] // TODO pass appropriate value to this component
     return <ExpansionPanel
       focused={focused}
       columnWidths={columnWidths}
-      label={<Label obj={this.state}/>}
-      onExpandToggle={ expanded => {
-        if(!expanded) update(this.state)
-      }}
+      label={<Label index={index}/>}
     >
       <div style={{
         display: 'flex',
@@ -84,15 +70,15 @@ export default class ReleaseForm extends Component {
         `}</style>
         <div>
           <label>{'Lot ID'}</label>
-          <div>{this.state.lotId}</div>
+          <div>{obj.lotId}</div>
         </div>
         <div>
           <label>{'Adspot ID'}</label>
-          <div>{this.state.adspotId}</div>
+          <div>{obj.adspotId}</div>
         </div>
         <div>
           <label>{'Program Name'}</label>
-          <div>{this.state.programName}</div>
+          <div>{obj.programName}</div>
         </div>
       </div>
       <div style={{
@@ -110,15 +96,15 @@ export default class ReleaseForm extends Component {
         `}</style>
         <div>
           <label>{'Day Part'}</label>
-          <div>{this.state.dayPart}</div>
+          <div>{obj.dayPart}</div>
         </div>
         <div>
           <label>{'Target GRP'}</label>
-          <div>{this.state.targetGrp}</div>
+          <div>{obj.targetGrp}</div>
         </div>
         <div>
           <label>{'Demographic'}</label>
-          <div>{this.state.targetDemographics}</div>
+          <div>{obj.targetDemographics}</div>
         </div>
       </div>
       <div style={{
@@ -136,63 +122,87 @@ export default class ReleaseForm extends Component {
         `}</style>
         <div>
           <label>{'Initial CPM'}</label>
-          <div>{this.state.initialCpm}</div>
+          <div>{obj.initialCpm}</div>
         </div>
         <div>
           <label>{'BSRP'}</label>
-          <div>{this.state.bsrp}</div>
+          <div>{obj.bsrp}</div>
         </div>
         <div>
           <label>{'Number of Spots'}</label>
-          <div>{this.state.numberOfSpots}</div>
+          <div>{obj.numberOfSpots}</div>
         </div>
       </div>
       <Divider/>
       <TextField
         id='text-field-order-number'
         label='Order Number'
-        value={this.state.orderNumber}
+        value={obj.orderNumber}
         floating
         fullWidth={false}
         className='md-cell md-cell--top'
         onChange={ val => {
           if(isNumeric(val)) {
-            this.setState({ orderNumber: val })
+            let arr = store.placeObjs.map( oldspot => {
+              if(oldspot.adspotId == obj.adspotId) {
+                obj.orderNumber = val
+                return obj
+              }
+              else return oldspot
+            })
+            store.placeObjs = arr
           }
         }}
       />
       <SelectField
         id='select-field-advertiser-id'
-        value={this.state.advertiserId}
+        value={obj.advertiserId}
         label='Advertiser ID'
         menuItems={store.advertisers}
         position={SelectField.Positions.BELOW}
         className='md-cell md-cell--top'
-        onChange={ val => this.setState({ advertiserId: val }) }
+        onChange={ val => {
+          let arr = store.placeObjs.map( oldspot => {
+            if(oldspot.adspotId == obj.adspotId) {
+              obj.advertiserId = val
+              return obj
+            }
+            else return oldspot
+          })
+          store.placeObjs = arr
+        }}
       />
       <TextField
         id='text-field-ad-contract-id'
         label='Ad Contract ID'
-        value={this.state.adContractId}
+        value={obj.adContractId}
         floating
         fullWidth={false}
         className='md-cell md-cell--top'
         onChange={ val => {
           if(isNumeric(val)) {
-            this.setState({ adContractId: val })
+            let arr = store.placeObjs.map( oldspot => {
+              if(oldspot.adspotId == obj.adspotId) {
+                obj.adContractId = val
+                return obj
+              }
+              else return oldspot
+            })
+            store.placeObjs = arr
           }
         }}
       />
       <Slider
         discrete
         id='slider-reserve-spots'
-        defaultValue={+this.state.numberOfSpotsToPurchase}
-        label={`Number of spots to purchase: ${this.state.numberOfSpotsToPurchase}`}
-        max={+this.state.numberOfSpots}
+        defaultValue={+obj.numberOfSpotsToPurchase}
+        label={`Number of spots to purchase: ${obj.numberOfSpotsToPurchase}`}
+        max={+obj.numberOfSpots}
         step={1}
         discreteTicks={1}
         onChange={ val => {
-          this.setState({ numberOfSpotsToPurchase: val })
+          //this.setState({ numberOfSpotsToPurchase: val })
+          obj.numberOfSpotsToPurchase = val
         }}
       />
     </ExpansionPanel>

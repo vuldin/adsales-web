@@ -1,14 +1,26 @@
 [
-    {
-      "campaignName":"Family Sedan"
-    },
-    {
-      "campaignName":"Sport SUV"
-    },
-    {
-      "campaignName":"Light Beer"
-    },
-    {
-      "campaignName":"IPA"
-    }
-  ]
+  {
+    "campaignName": "Family Sedan"
+  },
+  {
+    "campaignName": "Family Sedan"
+  },
+  {
+    "campaignName": "Sport SUV"
+  },
+  {
+    "campaignName": "Sport SUV"
+  },
+  {
+    "campaignName": "Light Beer"
+  },
+  {
+    "campaignName": "Light Beer"
+  },
+  {
+    "campaignName": "IPA"
+  },
+  {
+    "campaignName": "IPA"
+  }
+]

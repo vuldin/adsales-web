@@ -8,6 +8,7 @@ import PlaceForm from '../components/PlaceForm'
 import placeData from '../data/place.json'
 import { Provider } from 'mobx-react'
 import { initStore } from '../store'
+import { toJS } from 'mobx'
 
 function isNumeric(n) {
   return !isNaN(parseFloat(n)) && isFinite(n);
@@ -28,7 +29,14 @@ export default class extends React.Component {
         data: data,
       })
     orders = JSON.parse(orders.text)
-    orders = orders.placedOrderData
+    orders = orders.placedOrderData.map( order => {
+      order.orderNumber = ''
+      order.advertiserId = ''
+      order.adContractId = ''
+      order.numberOfSpotsToPurchase = '0'
+      return order
+    })
+    store.placeObjs = orders
     return { orders, lastUpdate: store.lastUpdate, isServer }
   }
   constructor(props) {
@@ -38,25 +46,26 @@ export default class extends React.Component {
       agencyId: this.store.username,
       broadcasterId: 'BroadcasterA',
       lotId: '1000',
-      spots: props.orders == null ? [] : props.orders,
       response: '',
     }
   }
   populate = () => {
     return placeData
   }
-  updateSpots = spot => {
-    let arr = this.state.spots.map( oldspot => {
-      if(oldspot.adspotId == spot.adspotId) return spot
-      else return oldspot
+  submit(spots) {
+    let arr = spots.map( spot => {
+      spot.adspotId = `${spot.adspotId}`
+      spot.bsrp = `${spot.bsrp}`
+      spot.initialCpm = `${spot.initialCpm}`
+      spot.lotId = `${spot.lotId}`
+      spot.numberOfSpots = `${spot.numberOfSpots}`
+      spot.targetGrp = `${spot.targetGrp}`
+      return spot
     })
-    this.setState({spots: arr})
-  }
-  submit() {
     let data = {
       agencyId: this.state.agencyId,
       broadcasterId: this.state.broadcasterId,
-      spots: this.state.spots.map( (val, i) => {
+      spots: arr.map( (val, i) => {
         return JSON.stringify(val)
       })
     }
@@ -98,10 +107,10 @@ export default class extends React.Component {
           <div style={{width: 105}}>Target</div>
           <div style={{width: 130}}>Available Spots</div>
           <div style={{width: 130}}>Advertiser ID</div>
-          <div style={{width: 130}}>Reserve Spots</div>
+          <div style={{width: 200}}>{`Number of spots to purchase`}</div>
         </div>
         <ExpansionList>
-           {this.state.spots.map( (spot, i) => <PlaceForm key={i} obj={spot} update={this.updateSpots}/>)}
+           {this.store.placeObjs.map( (spot, i) => <PlaceForm key={i} index={i}/>)}
         </ExpansionList>
         <div style={{
           display: 'flex',
@@ -109,20 +118,17 @@ export default class extends React.Component {
         }}>
           <Button raised primary label='Populate' onClick={() => {
             let data = this.populate()
-            let arr = this.state.spots.map( (spot, i) => {
+            let arr = this.store.placeObjs.map( (spot, i) => {
               spot.orderNumber = data[i].orderNumber
               spot.advertiserId = data[i].advertiserId
               spot.adContractId = data[i].adContractId
               spot.numberOfSpotsToPurchase = data[i].numberOfSpotsToPurchase
               return spot
             })
-            console.log(arr)
-            this.setState({
-              spots: arr,
-            })
+            this.store.placeObjs = arr
           }}/>
           <Button raised primary label='Submit' onClick={() => {
-            this.submit(this.state)
+            this.submit(this.store.placeObjs)
           }}/>
           <div style={{
             color: 'rgba(0,0,0,.54)',

@@ -5,6 +5,7 @@ import ExpansionList from 'react-md/lib/ExpansionPanels/ExpansionList'
 import Button from 'react-md/lib/Buttons/Button'
 import TextField from 'react-md/lib/TextFields'
 import ReportForm from '../components/ReportForm'
+import reportData from '../data/report.json'
 import { Provider } from 'mobx-react'
 import { initStore } from '../store'
 
@@ -26,36 +27,35 @@ export default class extends React.Component {
         data: data,
       })
     orders = JSON.parse(orders.text)
-    orders = orders.queryAsRunData
-    return { orders, lastUpdate: store.lastUpdate, isServer }
+    orders = orders.queryAsRunData.map( order => {
+      order.actualGrp = ''
+      order.actualProgramName = ''
+      order.actualDemographics = ''
+      order.makupAdspotId = ''
+      return order
+    })
+    store.reportObjs = orders
+    return { lastUpdate: store.lastUpdate, isServer }
   }
   constructor(props) {
     super(props)
     this.store = initStore(props.isServer, props.lastUpdate)
-    console.log('report constructor')
-    console.log(props.orders)
     this.state = {
       broadcasterId: 'BroadcasterA',
-      spots: props.orders == null ? [] : props.orders,
       response: '',
     }
   }
-  updateSpots = spot => {
-    let arr = this.state.spots.map( oldspot => {
-      if(oldspot.adspotId == spot.adspotId) return spot
-      else return oldspot
-    })
-    this.setState({spots: arr})
+  populate = () => {
+    return reportData
   }
-  submit() {
+  submit(spots) {
     let data = {
       agencyId: this.state.agencyId,
       broadcasterId: this.state.broadcasterId,
-      spots: this.state.spots.map( (val, i) => {
+      spots: spots.map( (val, i) => {
         return JSON.stringify(val)
       })
     }
-    console.log(JSON.stringify(data))
     request
       .post('//adsales-api-xrayyee.mybluemix.net/reportasrun')
       .type('form')
@@ -89,22 +89,34 @@ export default class extends React.Component {
               padding-top: 10px;
             }
           `}</style>
-          <div style={{width: 50}}>Contract</div>
-          <div style={{width: 145}}>Campaign</div>
-          <div style={{width: 105}}>Advertiser</div>
+          <div style={{width: 150}}>Unique Adspot ID</div>
+          <div style={{width: 200}}>Adspot ID</div>
+          <div style={{width: 145}}>Contract ID</div>
+          <div style={{width: 105}}>Campaign</div>
+          <div style={{width: 150}}>Program</div>
           <div style={{width: 130}}>Target GRP</div>
-          <div style={{width: 130}}>Demographic</div>
-          <div style={{width: 130}}>Initial CPM</div>
+          <div style={{width: 150}}>Target Demographic</div>
         </div>
         <ExpansionList>
-           {this.state.spots.map( (spot, i) => <ReportForm key={i} obj={spot} update={this.updateSpots}/>)}
+           {this.store.reportObjs.map( (spot, i) => <ReportForm key={i} index={i}/>)}
         </ExpansionList>
         <div style={{
           display: 'flex',
           alignItems: 'center',
         }}>
+          <Button raised primary label='Populate' onClick={() => {
+            let data = this.populate()
+            let arr = this.store.reportObjs.map( (spot, i) => {
+              spot.actualGrp = data[i].actualGrp
+              spot.actualProgramName = data[i].actualProgramName
+              spot.actualDemographics = data[i].actualDemographics
+              spot.makupAdspotId = data[i].makeupAdspotId
+              return spot
+            })
+            this.store.reportObjs = arr
+          }}/>
           <Button raised primary label='Submit' onClick={() => {
-            this.submit(this.state)
+            this.submit(this.store.reportObjs)
           }}/>
           <div style={{
             color: 'rgba(0,0,0,.54)',

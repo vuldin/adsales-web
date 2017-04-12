@@ -1,6 +1,5 @@
 import React, { PureComponent, Component } from 'react'
 import SelectField from 'react-md/lib/SelectFields'
-import TextField from 'react-md/lib/TextFields'
 import Slider from 'react-md/lib/Sliders'
 import ExpansionPanel from 'react-md/lib/ExpansionPanels/ExpansionPanel'
 import Divider from 'react-md/lib/Dividers'
@@ -10,9 +9,17 @@ function isNumeric(n) {
   return !isNaN(parseFloat(n)) && isFinite(n);
 }
 
+@inject('store') @observer
 class Label extends PureComponent {
+  componentDidMount() {
+    this.props.store.start()
+  }
+  componentWillUnmount() {
+    this.props.store.stop()
+  }
   render() {
-    let { obj } = this.props
+    let { store, index } = this.props
+    let obj = store.mapObjs[index]
     return <div className='label'>
       <style jsx>{`
         .label {
@@ -32,18 +39,6 @@ class Label extends PureComponent {
 
 @inject('store') @observer
 export default class ReleaseForm extends Component {
-  constructor(props) {
-    super(props)
-    let { obj } = props
-    this.state = {
-      adspotId: `${obj.adContractId}`,
-      programName: obj.campaignName,
-      genre: obj.advertiserId,
-      targetGrp: `${obj.targetGrp}`,
-      targetDemographics: obj.targetDemographics,
-      initialCpm: `${obj.initialCpm}`,
-    }
-  }
   componentDidMount() {
     this.props.store.start()
   }
@@ -51,15 +46,13 @@ export default class ReleaseForm extends Component {
     this.props.store.stop()
   }
   render() {
-    let { obj, focused, columnWidths, store, update } = this.props
+    let { focused, columnWidths, store, index } = this.props
+    let obj = store.mapObjs[index]
     columnWidths = [store.columnWidths] // TODO pass appropriate value to this component
     return <ExpansionPanel
       focused={focused}
       columnWidths={columnWidths}
-      label={<Label obj={this.state}/>}
-      onExpandToggle={ expanded => {
-        if(!expanded) update(this.state)
-      }}
+      label={<Label index={index}/>}
     >
       <div style={{
         display: 'flex',
@@ -76,15 +69,15 @@ export default class ReleaseForm extends Component {
         `}</style>
         <div>
           <label>{'Contract ID'}</label>
-          <div>{this.state.adContractId}</div>
+          <div>{obj.adContractId}</div>
         </div>
         <div>
           <label>{'Advertiser ID'}</label>
-          <div>{this.state.advertiserId}</div>
+          <div>{obj.advertiserId}</div>
         </div>
         <div>
           <label>{'Target GRP'}</label>
-          <div>{this.state.targetGrp}</div>
+          <div>{obj.targetGrp}</div>
         </div>
       </div>
       <div style={{
@@ -102,23 +95,30 @@ export default class ReleaseForm extends Component {
         `}</style>
         <div>
           <label>{'Target Demographic'}</label>
-          <div>{this.state.targetDemographics}</div>
+          <div>{obj.targetDemographics}</div>
         </div>
         <div>
           <label>{'Initial CPM'}</label>
-          <div>${this.state.initialCpm}</div>
+          <div>${obj.initialCpm}</div>
         </div>
       </div>
       <Divider/>
-      <TextField
-        id='text-field-campaign'
+      <SelectField
+        id='select-field-campaign'
+        value={obj.campaignName}
         label='Campaign Name'
-        value={this.state.campaignName}
-        floating
-        fullWidth={false}
+        menuItems={store.campaignNames}
+        position={SelectField.Positions.BELOW}
         className='md-cell md-cell--top'
         onChange={ val => {
-          this.setState({ campaignName: val })
+          let arr = store.mapObjs.map( oldspot => {
+            if(oldspot.uniqueAdspotId == obj.uniqueAdspotId) {
+              obj.campaignName = val
+              return obj
+            }
+            else return oldspot
+          })
+          store.mapObjs = arr
         }}
       />
     </ExpansionPanel>

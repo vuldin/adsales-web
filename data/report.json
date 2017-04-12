@@ -1,147 +1,146 @@
 [
-    {
-      "actualGRP":"2.4",
-      "actualProgramName":"Dance Competition",
-      "actualDemographics":"Women 18-54",
-      "makeupAdspotId":"-"
-    },
-    {
-      "actualGRP":"2.4",
-      "actualProgramName":"Dance Competition",
-      "actualDemographics":"Women 18-54",
-      "makeupAdspotId":"-"
-    },
-    {
-     "actualGRP":"2.4",
-      "actualProgramName":"Dance Competition",
-      "actualDemographics":"Women 18-54",
-      "makeupAdspotId":"-"
-    },
-    {
-      "actualGRP":"2.4",
-      "actualProgramName":"Dance Competition",
-      "actualDemographics":"Women 18-54",
-      "makeupAdspotId":"-"
-    },
-    {
-      "actualGRP":"2.4",
-      "actualProgramName":"Dance Competition",
-      "actualDemographics":"Women 18-54",
-      "makeupAdspotId":"-"
-    },
-    {
-      "actualGRP":"2.4",
-      "actualProgramName":"Dance Competition",
-      "actualDemographics":"Women 18-54",
-      "makeupAdspotId":"-"
-    },
-    {
-      "actualGRP":"0.8",
-      "actualProgramName":"Breaking News",
-      "actualDemographics":"Men 20-60",
-      "makeupAdspotId":"1000_11,1000_12"
-    },
-    {
-      "actualGRP":"1.6",
-      "actualProgramName":"Urban Family",
-      "actualDemographics":"Women 18-54",
-      "makeupAdspotId":"-"
-    },
-    {
-      "actualGRP":"1.6",
-      "actualProgramName":"Urban Family",
-      "actualDemographics":"Women 18-54",
-      "makeupAdspotId":"-"
-    },
-    {
-      "actualGRP":"1.6",
-      "actualProgramName":"Urban Family",
-      "actualDemographics":"Women 18-54",
-      "makeupAdspotId":"-"
-    },
-    {
-      "actualGRP":"1.6",
-      "actualProgramName":"Urban Family",
-      "actualDemographics":"Women 18-54",
-      "makeupAdspotId":"-"
-    },
-    {
-      "actualGRP":"1.6",
-      "actualProgramName":"Urban Family",
-      "actualDemographics":"Women 18-54",
-      "makeupAdspotId":"-"
-    },
-    {
-      "actualGRP":"1.5",
-      "actualProgramName":"Crime Show",
-      "actualDemographics":"Men 18-54",
-      "makeupAdspotId":"-"
-    },
-        {
-      "actualGRP":"1.5",
-      "actualProgramName":"Crime Show",
-      "actualDemographics":"Men 18-54",
-      "makeupAdspotId":"-"
-    },
-        {
-      "actualGRP":"1.5",
-      "actualProgramName":"Crime Show",
-      "actualDemographics":"Men 18-54",
-      "makeupAdspotId":"-"
-    },
-        {
-      "actualGRP":"1.5",
-      "actualProgramName":"Crime Show",
-      "actualDemographics":"Men 18-54",
-      "makeupAdspotId":"-"
-    },
-        {
-      "actualGRP":"1.5",
-      "actualProgramName":"Crime Show",
-      "actualDemographics":"Men 18-54",
-      "makeupAdspotId":"-"
-    },
-        {
-      "actualGRP":"1.5",
-      "actualProgramName":"Crime Show",
-      "actualDemographics":"Men 18-54",
-      "makeupAdspotId":"-"
-    },
-        {
-      "actualGRP":"3.6",
-      "actualProgramName":"Baseball",
-      "actualDemographics":"Man 21-49",
-      "makeupAdspotId":"-"
-    },
-            {
-      "actualGRP":"3.6",
-      "actualProgramName":"Baseball",
-      "actualDemographics":"Man 21-49",
-      "makeupAdspotId":"-"
-    },
-            {
-      "actualGRP":"3.6",
-      "actualProgramName":"Baseball",
-      "actualDemographics":"Man 21-49",
-      "makeupAdspotId":"-"
-    },
-            {
-      "actualGRP":"3.6",
-      "actualProgramName":"Baseball",
-      "actualDemographics":"Man 21-49",
-      "makeupAdspotId":"-"
-    },
-            {
-      "actualGRP":"3.6",
-      "actualProgramName":"Baseball",
-      "actualDemographics":"Man 21-49",
-      "makeupAdspotId":"-"
-    },
-            {
-      "actualGRP":"3.6",
-      "actualProgramName":"Baseball",
-      "actualDemographics":"Man 21-49",
-      "makeupAdspotId":"-"
-    }
-  ]
-}
+  {
+    "actualGrp":"2.4",
+    "actualProgramName":"Dance Competition",
+    "actualDemographics":"Women 18-54",
+    "makeupAdspotId":"-"
+  },
+  {
+    "actualGrp":"2.4",
+    "actualProgramName":"Dance Competition",
+    "actualDemographics":"Women 18-54",
+    "makeupAdspotId":"-"
+  },
+  {
+   "actualGrp":"2.4",
+    "actualProgramName":"Dance Competition",
+    "actualDemographics":"Women 18-54",
+    "makeupAdspotId":"-"
+  },
+  {
+    "actualGrp":"2.4",
+    "actualProgramName":"Dance Competition",
+    "actualDemographics":"Women 18-54",
+    "makeupAdspotId":"-"
+  },
+  {
+    "actualGrp":"2.4",
+    "actualProgramName":"Dance Competition",
+    "actualDemographics":"Women 18-54",
+    "makeupAdspotId":"-"
+  },
+  {
+    "actualGrp":"2.4",
+    "actualProgramName":"Dance Competition",
+    "actualDemographics":"Women 18-54",
+    "makeupAdspotId":"-"
+  },
+  {
+    "actualGrp":"0.8",
+    "actualProgramName":"Breaking News",
+    "actualDemographics":"Men 20-60",
+    "makeupAdspotId":"1000_11,1000_12"
+  },
+  {
+    "actualGrp":"1.6",
+    "actualProgramName":"Urban Family",
+    "actualDemographics":"Women 18-54",
+    "makeupAdspotId":"-"
+  },
+  {
+    "actualGrp":"1.6",
+    "actualProgramName":"Urban Family",
+    "actualDemographics":"Women 18-54",
+    "makeupAdspotId":"-"
+  },
+  {
+    "actualGrp":"1.6",
+    "actualProgramName":"Urban Family",
+    "actualDemographics":"Women 18-54",
+    "makeupAdspotId":"-"
+  },
+  {
+    "actualGrp":"1.6",
+    "actualProgramName":"Urban Family",
+    "actualDemographics":"Women 18-54",
+    "makeupAdspotId":"-"
+  },
+  {
+    "actualGrp":"1.6",
+    "actualProgramName":"Urban Family",
+    "actualDemographics":"Women 18-54",
+    "makeupAdspotId":"-"
+  },
+  {
+    "actualGrp":"1.5",
+    "actualProgramName":"Crime Show",
+    "actualDemographics":"Men 18-54",
+    "makeupAdspotId":"-"
+  },
+  {
+    "actualGrp":"1.5",
+    "actualProgramName":"Crime Show",
+    "actualDemographics":"Men 18-54",
+    "makeupAdspotId":"-"
+  },
+  {
+    "actualGrp":"1.5",
+    "actualProgramName":"Crime Show",
+    "actualDemographics":"Men 18-54",
+    "makeupAdspotId":"-"
+  },
+  {
+    "actualGrp":"1.5",
+    "actualProgramName":"Crime Show",
+    "actualDemographics":"Men 18-54",
+    "makeupAdspotId":"-"
+  },
+  {
+    "actualGrp":"1.5",
+    "actualProgramName":"Crime Show",
+    "actualDemographics":"Men 18-54",
+    "makeupAdspotId":"-"
+  },
+  {
+    "actualGrp":"1.5",
+    "actualProgramName":"Crime Show",
+    "actualDemographics":"Men 18-54",
+    "makeupAdspotId":"-"
+  },
+  {
+    "actualGrp":"3.6",
+    "actualProgramName":"Baseball",
+    "actualDemographics":"Men 21-49",
+    "makeupAdspotId":"-"
+  },
+  {
+    "actualGrp":"3.6",
+    "actualProgramName":"Baseball",
+    "actualDemographics":"Men 21-49",
+    "makeupAdspotId":"-"
+  },
+  {
+    "actualGrp":"3.6",
+    "actualProgramName":"Baseball",
+    "actualDemographics":"Men 21-49",
+    "makeupAdspotId":"-"
+  },
+  {
+    "actualGrp":"3.6",
+    "actualProgramName":"Baseball",
+    "actualDemographics":"Men 21-49",
+    "makeupAdspotId":"-"
+  },
+  {
+    "actualGrp":"3.6",
+    "actualProgramName":"Baseball",
+    "actualDemographics":"Men 21-49",
+    "makeupAdspotId":"-"
+  },
+  {
+    "actualGrp":"3.6",
+    "actualProgramName":"Baseball",
+    "actualDemographics":"Men 21-49",
+    "makeupAdspotId":"-"
+  }
+]

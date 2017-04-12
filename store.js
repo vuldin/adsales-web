@@ -1,5 +1,5 @@
 import { action, observable } from 'mobx'
-//import { autorun } from 'mobx'
+import { autorun, toJS } from 'mobx'
 
 let store = null
 
@@ -42,7 +42,7 @@ class Store {
       component: {
         key: 1,
         href: '/release',
-        primaryText: 'Release Inventory',
+        primaryText: '1 Release Inventory',
       },
     },
     {
@@ -50,7 +50,7 @@ class Store {
       component: {
         key: 2,
         href: '/place',
-        primaryText: 'Place Orders',
+        primaryText: '2 Place Orders',
       },
     },
     {
@@ -58,7 +58,7 @@ class Store {
       component: {
         key: 3,
         href: '/map',
-        primaryText: 'Map Ads',
+        primaryText: '3 Map Ads',
       },
     },
     {
@@ -66,7 +66,7 @@ class Store {
       component: {
         key: 4,
         href: '/report',
-        primaryText: 'Report Aired Ads',
+        primaryText: '4 Report Aired Ads',
       },
     },
     {
@@ -74,7 +74,7 @@ class Store {
       component: {
         key: 5,
         href: '/trace',
-        primaryText: 'Trace Ads',
+        primaryText: '5 Trace Ads',
       },
     },
   ]
@@ -119,15 +119,24 @@ class Store {
     'AdvertiserC',
   ]
   campaignNames = [
-'Family Sedan',
-'Sport SUV',
-'Light Beer',
-'IPA',
+    'Family Sedan',
+    'Sport SUV',
+    'Light Beer',
+    'IPA',
+  ]
+  @observable placeObjs = [
+  ]
+  @observable mapObjs = [
+  ]
+  @observable reportObjs = [
   ]
 
   constructor (isServer, lastUpdate) {
     this.lastUpdate = lastUpdate
-    //autorun( () => console.log(this.username))
+    autorun( () => {
+      console.log('autorun')
+      console.log(toJS(this.reportObjs))
+    })
   }
 
   @action start = () => {

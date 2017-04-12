@@ -5,8 +5,10 @@ import ExpansionList from 'react-md/lib/ExpansionPanels/ExpansionList'
 import Button from 'react-md/lib/Buttons/Button'
 import TextField from 'react-md/lib/TextFields'
 import MapForm from '../components/MapForm'
+import mapData from '../data/map.json'
 import { Provider } from 'mobx-react'
 import { initStore } from '../store'
+import { toJS } from 'mobx'
 
 function isNumeric(n) {
   return !isNaN(parseFloat(n)) && isFinite(n);
@@ -26,8 +28,12 @@ export default class extends React.Component {
         data: data,
       })
     orders = JSON.parse(orders.text)
-    orders = orders.adspotsToMapData
-    return { orders, lastUpdate: store.lastUpdate, isServer }
+    orders = orders.adspotsToMapData.map( order => {
+      order.campaignName = ''
+      return order
+    })
+    store.mapObjs = orders
+    return { lastUpdate: store.lastUpdate, isServer }
   }
   constructor(props) {
     super(props)
@@ -36,28 +42,20 @@ export default class extends React.Component {
       agencyId: this.store.username,
       broadcasterId: 'BroadcasterA',
       lotId: '1000',
-      spots: props.orders == null ? [] : props.orders,
       response: '',
     }
   }
-  retrieve = () => {
+  populate = () => {
+    return mapData
   }
-  updateSpots = spot => {
-    let arr = this.state.spots.map( oldspot => {
-      if(oldspot.adspotId == spot.adspotId) return spot
-      else return oldspot
-    })
-    this.setState({spots: arr})
-  }
-  submit() {
+  submit(spots) {
     let data = {
       agencyId: this.state.agencyId,
       broadcasterId: this.state.broadcasterId,
-      spots: this.state.spots.map( (val, i) => {
+      spots: spots.map( (val, i) => {
         return JSON.stringify(val)
       })
     }
-    console.log(JSON.stringify(data))
     request
       .post('//adsales-api-xrayyee.mybluemix.net/mapadspots')
       .type('form')
@@ -99,14 +97,22 @@ export default class extends React.Component {
           <div style={{width: 130}}>Initial CPM</div>
         </div>
         <ExpansionList>
-           {this.state.spots.map( (spot, i) => <MapForm key={i} obj={spot} update={this.updateSpots}/>)}
+           {this.store.mapObjs.map( (spot, i) => <MapForm key={i} index={i}/>)}
         </ExpansionList>
         <div style={{
           display: 'flex',
           alignItems: 'center',
         }}>
+          <Button raised primary label='Populate' onClick={() => {
+            let data = this.populate()
+            let arr = this.store.mapObjs.map( (spot, i) => {
+              spot.campaignName = data[i].campaignName
+              return spot
+            })
+            this.store.mapObjs = arr
+          }}/>
           <Button raised primary label='Submit' onClick={() => {
-            this.submit(this.state)
+            this.submit(this.store.mapObjs)
           }}/>
           <div style={{
             color: 'rgba(0,0,0,.54)',

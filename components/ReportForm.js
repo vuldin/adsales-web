@@ -10,50 +10,8 @@ function isNumeric(n) {
   return !isNaN(parseFloat(n)) && isFinite(n);
 }
 
-class Label extends PureComponent {
-  render() {
-    let { obj } = this.props
-    return <div className='label'>
-      <style jsx>{`
-        .label {
-          display: flex;
-          justify-content: space-between;
-        }
-      `}</style>
-      <div style={{width: 50}}>{obj.uniqueAdspotId}</div>
-      <div style={{width: 50}}>{obj.adspotId}</div>
-      <div style={{width: 145}}>{obj.adContractId}</div>
-      <div style={{width: 105}}>{obj.campaignName}</div>
-      <div style={{width: 105}}>{obj.programName}</div>
-      <div style={{width: 130}}>{obj.targetGrp}</div>
-      <div style={{width: 130}}>${obj.targetDemographics}</div>
-      <div style={{width: 130}}>{obj.actualGrp}</div>
-      <div style={{width: 130}}>{obj.actualProgramName}</div>
-      <div style={{width: 130}}>{obj.actualDemographics}</div>
-      <div style={{width: 130}}>{obj.makeupAdspotId}</div>
-    </div>
-  }
-}
-
 @inject('store') @observer
-export default class ReleaseForm extends Component {
-  constructor(props) {
-    super(props)
-    let { obj } = props
-    this.state = {
-      uniqueAd: `${obj.uniqueAdspotId}`,
-      adspotId: `${obj.adspotId}`,
-      adContractId: `${obj.adContractId}`,
-      campaignName: obj.campaignName,
-      programName: obj.programName,
-      targetGrp: `${obj.targetGrp}`,
-      targetDemographics: obj.targetDemographics,
-      actualGrp: `${obj.actualGrp}`,
-      actualProgramName: obj.actualProgramName,
-      actualDemographics: obj.actualDemographics,
-      makeupAdspotId: `${obj.makeupAdspotId}`,
-    }
-  }
+class Label extends PureComponent {
   componentDidMount() {
     this.props.store.start()
   }
@@ -61,15 +19,42 @@ export default class ReleaseForm extends Component {
     this.props.store.stop()
   }
   render() {
-    let { obj, focused, columnWidths, store, update } = this.props
+    let { store, index } = this.props
+    let obj = store.reportObjs[index]
+    return <div className='label'>
+      <style jsx>{`
+        .label {
+          display: flex;
+          justify-content: space-between;
+        }
+      `}</style>
+      <div style={{width: 150}}>{obj.uniqueAdspotId}</div>
+      <div style={{width: 200}}>{obj.adspotId == -1 ? 'Reserved for makeup' : obj.adspotId}</div>
+      <div style={{width: 145}}>{obj.adContractId == -1 ? '' : obj.adContractId}</div>
+      <div style={{width: 105}}>{obj.campaignName}</div>
+      <div style={{width: 150}}>{obj.programName}</div>
+      <div style={{width: 130}}>{obj.targetGrp}</div>
+      <div style={{width: 150}}>{obj.targetDemographics}</div>
+    </div>
+  }
+}
+
+@inject('store') @observer
+export default class ReleaseForm extends Component {
+  componentDidMount() {
+    this.props.store.start()
+  }
+  componentWillUnmount() {
+    this.props.store.stop()
+  }
+  render() {
+    let { focused, columnWidths, store, index } = this.props
+    let obj = store.reportObjs[index]
     columnWidths = [store.columnWidths] // TODO pass appropriate value to this component
     return <ExpansionPanel
       focused={focused}
       columnWidths={columnWidths}
-      label={<Label obj={this.state}/>}
-      onExpandToggle={ expanded => {
-        if(!expanded) update(this.state)
-      }}
+      label={<Label index={index}/>}
     >
       <div style={{
         display: 'flex',
@@ -86,19 +71,19 @@ export default class ReleaseForm extends Component {
         `}</style>
         <div>
           <label>{'Unique Adspot ID'}</label>
-          <div>{this.state.uniqueAdspotId}</div>
+          <div>{obj.uniqueAdspotId}</div>
         </div>
         <div>
           <label>{'Adspot ID'}</label>
-          <div>{this.state.adspotId}</div>
+          <div>{obj.adspotId}</div>
         </div>
         <div>
           <label>{'Ad Contract ID'}</label>
-          <div>{this.state.adContractId}</div>
+          <div>{obj.adContractId}</div>
         </div>
         <div>
           <label>{'Campaign Name'}</label>
-          <div>{this.state.campaignName}</div>
+          <div>{obj.campaignName}</div>
         </div>
       </div>
       <div style={{
@@ -116,60 +101,92 @@ export default class ReleaseForm extends Component {
         `}</style>
         <div>
           <label>{'Program Name'}</label>
-          <div>{this.state.programName}</div>
+          <div>{obj.programName}</div>
         </div>
         <div>
           <label>{'Target GRP'}</label>
-          <div>${this.state.targetGrp}</div>
+          <div>${obj.targetGrp}</div>
         </div>
         <div>
           <label>{'Target Demographic'}</label>
-          <div>${this.state.targetDemographics}</div>
+          <div>${obj.targetDemographics}</div>
         </div>
       </div>
       <Divider/>
       <TextField
         id='text-field-actual-grp'
         label='Actual GRP'
-        value={this.state.actualGrp}
+        value={obj.actualGrp}
         floating
         fullWidth={false}
         className='md-cell md-cell--top'
         onChange={ val => {
-          if(isNumeric(val)) this.setState({ actualGrp: val })
+          if(isNumeric(val)) {
+            let arr = store.reportObjs.map( oldspot => {
+              if(oldspot.uniqueAdspotId == obj.uniqueAdspotId) {
+                obj.actualGrp = val
+                return obj
+              }
+              else return oldspot
+            })
+            store.reportObjs = arr
+          }
         }}
       />
       <TextField
         id='text-field-program-name'
         label='Program Name'
-        value={this.state.programName}
+        value={obj.programName}
         floating
         fullWidth={false}
         className='md-cell md-cell--top'
         onChange={ val => {
-          this.setState({ programName: val })
+          let arr = store.reportObjs.map( oldspot => {
+            if(oldspot.uniqueAdspotId == obj.uniqueAdspotId) {
+              obj.programName = val
+              return obj
+            }
+            else return oldspot
+          })
+          store.reportObjs = arr
         }}
       />
-      <TextField
-        id='text-field-actual-demographic'
-        label='Actual Demographic'
-        value={this.state.actualDemographic}
-        floating
-        fullWidth={false}
+      <SelectField
+        id='select-field-actual-demographic'
+        value={obj.actualDemographic}
+        label='Actual Demographics'
+        menuItems={store.demographics}
+        position={SelectField.Positions.BELOW}
         className='md-cell md-cell--top'
         onChange={ val => {
-          this.setState({ actualDemographics: val })
+          let arr = store.reportObjs.map( oldspot => {
+            if(oldspot.uniqueAdspotId == obj.uniqueAdspotId) {
+              obj.actualDemographics = val
+              return obj
+            }
+            else return oldspot
+          })
+          store.reportObjs = arr
         }}
       />
       <TextField
         id='text-field-makeup-adspot-id'
         label='Makeup Adspot ID'
-        value={this.state.makeupAdspotId}
+        value={obj.makeupAdspotId}
         floating
         fullWidth={false}
         className='md-cell md-cell--top'
         onChange={ val => {
-          if(isNumeric(val)) this.setState({ makeupAdspotId: val })
+          if(isNumeric(val)) {
+            let arr = store.reportObjs.map( oldspot => {
+              if(oldspot.uniqueAdspotId == obj.uniqueAdspotId) {
+                obj.makeupAdspotId = val
+                return obj
+              }
+              else return oldspot
+            })
+            store.reportObjs = arr
+          }
         }}
       />
     </ExpansionPanel>
