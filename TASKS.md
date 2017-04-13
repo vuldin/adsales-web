@@ -1,0 +1,2 @@
+- place orders
+  - visualization for showing spots sold, total spots, spots reserved

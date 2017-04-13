@@ -3,9 +3,9 @@ import ReactDOM from 'react-dom'
 import { Provider } from 'mobx-react'
 import { initStore } from '../store'
 import Dashboard from '../components/Dashboard'
-import map from '../lib/map'
+//import map from '../lib/map'
 import { observer } from 'mobx-react'
-import Clock from '../components/Clock'
+import Paper from 'react-md/lib/Papers'
 
 @observer
 export default class Index extends React.Component {
@@ -29,6 +29,22 @@ export default class Index extends React.Component {
   render() {
     return <Provider store={this.store}>
       <Dashboard>
+        <style jsx global>{`
+          .paper {
+            display: flex;
+            flex-flow: column;
+            justify-content: center;
+            align-items: center;
+            background-color: #3f51b5;
+            color: #fff;
+            width: 140px;
+            height: 70px;
+          }
+          .label {
+            color: rgba(0,0,0,.54);
+            height: 25px;
+          }
+        `}</style>
         {/*
         <div
           ref='map'
@@ -38,12 +54,45 @@ export default class Index extends React.Component {
           }}
         />
         */}
-        <div style={{
-          display: 'flex',
-          flexFlow: 'column',
-        }}>
-          <Clock lastUpdate={this.store.lastUpdate} light={this.store.light} />
-          <div>{this.store.username}</div>
+        <div
+          style={{
+            display: 'flex',
+            paddingTop: '8px',
+          }}
+        >
+          <div style={{
+            display: 'flex',
+            flexFlow: 'column',
+            alignItems: 'center',
+          }}>
+            <div className='label'>Last week</div>
+            <Paper className='paper' zDepth={1}>
+              <div>{'Previous blocks'}</div>
+              <div>{`Count: ${this.store.blockchainCount}`}</div>
+            </Paper>
+          </div>
+          {this.store.blockchain.map( (bc, i) => <div key={i} style={{
+            display: 'flex',
+            alignItems: 'center',
+          }}>
+            <div style={{
+              width: '30px',
+              height: '2px',
+              backgroundColor: '#3f51b5',
+            }}/>
+            <div style={{
+              display: 'flex',
+              flexFlow: 'column',
+              alignItems: 'center',
+            }}>
+              <div className='label'>{this.store.blockchainCount + i + 1}</div>
+              <Paper className='paper' zDepth={1}>
+                <div>{bc.id}</div>
+                <div>{bc.user}</div>
+                <div>{bc.type}</div>
+              </Paper>
+            </div>
+          </div>)}
         </div>
       </Dashboard>
     </Provider>

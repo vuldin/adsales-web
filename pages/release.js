@@ -75,6 +75,15 @@ export default class extends React.Component {
           this.setState({ response: `success (${response})`})
         }
       })
+    let min = 1000
+    let max = 9999
+    let newBlockchain = this.store.blockchain.slice()
+    newBlockchain.push({
+      id: `...${Math.floor(Math.random() * (max - min + 1)) + min}`,
+      user: 'BroadcasterA',
+      type: 'Release Inventory',
+    })
+    this.store.blockchain = newBlockchain
   }
   componentWillMount() {
     this.store.navItems.map( obj => {

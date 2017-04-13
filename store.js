@@ -135,6 +135,17 @@ class Store {
   ]
   @observable traceIndex = -1
   apiServer = 'adsales-api-xrayyee-5.mybluemix.net'
+  blockchainCount = 427
+  @observable blockchain = [
+    /*
+    {
+      id: 123,
+      user: 'BroadcasterA',
+      type: 'release inventory',
+      data: 'data',
+    }
+    */
+  ]
 
   constructor (isServer, lastUpdate) {
     this.lastUpdate = lastUpdate
