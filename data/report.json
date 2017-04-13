@@ -30,16 +30,16 @@
     "makeupAdspotId":""
   },
   {
-    "actualGrp":"2.4",
-    "actualProgramName":"Dance Competition",
-    "actualDemographics":"Women 18-54",
-    "makeupAdspotId":""
-  },
-  {
     "actualGrp":"0.8",
     "actualProgramName":"Breaking News",
     "actualDemographics":"Men 20-60",
     "makeupAdspotId":"1000_11,1000_12"
+  },
+  {
+    "actualGrp":"1.6",
+    "actualProgramName":"Urban Family",
+    "actualDemographics":"Women 18-54",
+    "makeupAdspotId":""
   },
   {
     "actualGrp":"1.6",
