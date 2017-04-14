@@ -25,14 +25,15 @@ class Label extends PureComponent {
       <style jsx>{`
         .label {
           display: flex;
-          justify-content: space-between;
         }
       `}</style>
       <div style={{width: 150}}>{obj.uniqueAdspotId}</div>
+      {/*
       <div style={{width: 200}}>{obj.adspotId == -1 ? 'Reserved for makeup' : obj.adspotId}</div>
       <div style={{width: 145}}>{obj.adContractId == -1 ? '' : obj.adContractId}</div>
-      <div style={{width: 105}}>{obj.campaignName}</div>
-      <div style={{width: 150}}>{obj.programName}</div>
+      */}
+      <div style={{width: 135}}>{obj.campaignName}</div>
+      <div style={{width: 165}}>{obj.programName}</div>
       <div style={{width: 130}}>{obj.targetGrp}</div>
       <div style={{width: 150}}>{obj.targetDemographics}</div>
     </div>
@@ -48,12 +49,10 @@ export default class ReleaseForm extends Component {
     this.props.store.stop()
   }
   render() {
-    let { focused, columnWidths, store, index } = this.props
+    let { focused, store, index } = this.props
     let obj = store.reportObjs[index]
-    columnWidths = [store.columnWidths] // TODO pass appropriate value to this component
     return <ExpansionPanel
       focused={focused}
-      columnWidths={columnWidths}
       label={<Label index={index}/>}
     >
       <div style={{
@@ -100,12 +99,12 @@ export default class ReleaseForm extends Component {
           }
         `}</style>
         <div>
-          <label>{'Program Name'}</label>
+          <label>{'Target Program'}</label>
           <div>{obj.programName}</div>
         </div>
         <div>
           <label>{'Target GRP'}</label>
-          <div>${obj.targetGrp}</div>
+          <div>{obj.targetGrp}</div>
         </div>
         <div>
           <label>{'Target Demographic'}</label>
@@ -113,6 +112,24 @@ export default class ReleaseForm extends Component {
         </div>
       </div>
       <Divider/>
+      <TextField
+        id='text-field-program-name'
+        label='Actual Program'
+        value={obj.actualProgramName}
+        floating
+        fullWidth={false}
+        className='md-cell md-cell--top'
+        onChange={ val => {
+          let arr = store.reportObjs.map( oldspot => {
+            if(oldspot.uniqueAdspotId == obj.uniqueAdspotId) {
+              obj.actualProgramName = val
+              return obj
+            }
+            else return oldspot
+          })
+          store.reportObjs = arr
+        }}
+      />
       <TextField
         id='text-field-actual-grp'
         label='Actual GRP'
@@ -131,24 +148,6 @@ export default class ReleaseForm extends Component {
             })
             store.reportObjs = arr
           }
-        }}
-      />
-      <TextField
-        id='text-field-program-name'
-        label='Program Name'
-        value={obj.programName}
-        floating
-        fullWidth={false}
-        className='md-cell md-cell--top'
-        onChange={ val => {
-          let arr = store.reportObjs.map( oldspot => {
-            if(oldspot.uniqueAdspotId == obj.uniqueAdspotId) {
-              obj.programName = val
-              return obj
-            }
-            else return oldspot
-          })
-          store.reportObjs = arr
         }}
       />
       <SelectField

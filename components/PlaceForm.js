@@ -25,12 +25,11 @@ class Label extends PureComponent {
       <style jsx>{`
         .label {
           display: flex;
-          justify-content: space-between;
         }
       `}</style>
-      <div style={{width: 50}}>{obj.adspotId}</div>
-      <div style={{width: 145}}>{obj.programName}</div>
-      <div style={{width: 105}}>{obj.targetDemographics}</div>
+      <div style={{width: 100}}>{obj.adspotId}</div>
+      <div style={{width: 165}}>{obj.programName}</div>
+      <div style={{width: 145}}>{obj.targetDemographics}</div>
       <div style={{width: 130}}>{obj.numberOfSpots}</div>
       <div style={{width: 130}}>{obj.advertiserId}</div>
       <div style={{width: 200}}>{obj.numberOfSpotsToPurchase}</div>
@@ -47,12 +46,10 @@ export default class ReleaseForm extends Component {
     this.props.store.stop()
   }
   render() {
-    let { focused, columnWidths, store, index } = this.props
+    let { focused, store, index } = this.props
     let obj = store.placeObjs[index]
-    columnWidths = [store.columnWidths] // TODO pass appropriate value to this component
     return <ExpansionPanel
       focused={focused}
-      columnWidths={columnWidths}
       label={<Label index={index}/>}
     >
       <div style={{
@@ -202,7 +199,7 @@ export default class ReleaseForm extends Component {
         discreteTicks={1}
         onChange={ val => {
           //this.setState({ numberOfSpotsToPurchase: val })
-          obj.numberOfSpotsToPurchase = val
+          obj.numberOfSpotsToPurchase = `${val}`
         }}
       />
     </ExpansionPanel>

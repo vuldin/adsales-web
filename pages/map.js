@@ -98,13 +98,11 @@ export default class extends React.Component {
           <style jsx>{`
             .header {
               display: flex;
-              justify-content: space-between;
-              width: ${this.store.columnWidths}px;
               padding-left: 24px;
               padding-top: 10px;
             }
           `}</style>
-          <div style={{width: 50}}>Contract</div>
+          <div style={{width: 100}}>Contract ID</div>
           <div style={{width: 145}}>Campaign</div>
           <div style={{width: 105}}>Advertiser</div>
           <div style={{width: 130}}>Target GRP</div>

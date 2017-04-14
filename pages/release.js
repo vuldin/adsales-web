@@ -8,6 +8,7 @@ import ReleaseForm from '../components/ReleaseForm'
 import releaseData from '../data/release.json'
 import { Provider } from 'mobx-react'
 import { initStore } from '../store'
+//import broadcasterUrl from '../static/BroadcasterA.png'
 
 function isNumeric(n) {
   return !isNaN(parseFloat(n)) && isFinite(n);
@@ -91,40 +92,63 @@ export default class extends React.Component {
     })
   }
   render() {
+    let broadcasterUrl = 'static/BroadcasterA.png'
+    let agencyAUrl = 'static/AdAgencyA.png'
+    let advertiserAUrl = 'static/AdvertiserA.png'
+    let advertiserCUrl = 'static/AdvertiserC.png'
+    let otherPeerUrl = 'static/OtherPeers.png'
+    let ledgerUrl = 'static/BlockchainServices.png'
+    let chartObjWidth = 250
+    let rectangle = 'l0,100 l175,0 l0,-100 l-175,0'
     return <Provider store={this.store}>
       <Dashboard>
-        <TextField
-          id='text-field-lot-id'
-          label='Lot ID'
-          value={this.state.lotId}
-          floating
-          fullWidth={false}
-          className='md-cell md-cell--top'
-          onChange={ val => {
-            if(isNumeric(val)) {
-              this.setState({ lotId: +val })
-            }
-          }}
-        />
-        <div className='header'>
-        <style jsx>{`
-          .header {
-            display: flex;
-            justify-content: space-between;
-            width: ${this.store.columnWidths}px;
-            padding-left: 24px;
-            padding-top: 10px;
-          }
-        `}</style>
-          <div style={{width: 50}}>Spot ID</div>
-          <div style={{width: 145}}>Program</div>
-          <div style={{width: 105}}>Target</div>
-          <div style={{width: 130}}>Reserve Spots</div>
-          <div style={{width: 130}}>Available Spots</div>
+        <div style={{
+          backgroundColor: 'white',
+          width: '800px',
+          height: '350px',
+          paddingTop: '8px',
+        }}>
+<svg width='800' height='350'>
+  <title>Test</title>
+  <defs>
+    <pattern id="broadcasterA" patternUnits="userSpaceOnUse" width="200" height="100">
+      <image xlinkHref={broadcasterUrl} x="0" y="0" width="200" height="100"/>
+    </pattern>
+  </defs>
+  <path d={`M5,70 ${rectangle} Z`} fill={`url(${broadcasterUrl})`}/>
+  <path d={`M200,0 ${rectangle} Z`} fill="red"/>
+  {/*
+  <path d="M5,50 l0,100 l100,0 l0,-100 l-100,0 Z" fill="url(#broadcasterA)"/>
+  <path d="M215,100 a50,50 0 1 1 -100,0 50,50 0 1 1 100,0 Z" fill="url(#broadcasterA)"/>
+  */}
+</svg>
+          {/*
+          <img src={broadcasterUrl} width={chartObjWidth} style={{
+            position: 'fixed',
+            transform: 'translate(0px, 70px)'
+          }}/>
+          <img src={agencyAUrl} width={chartObjWidth} style={{
+            position: 'fixed',
+            transform: 'translate(275px, 0px)'
+          }}/>
+          <img src={advertiserAUrl} width={chartObjWidth} style={{
+            position: 'fixed',
+            transform: 'translate(550px, 70px)'
+          }}/>
+          <img src={advertiserCUrl} width={chartObjWidth} style={{
+            position: 'fixed',
+            transform: 'translate(430px, 195px)'
+          }}/>
+          <img src={otherPeerUrl} width={chartObjWidth} style={{
+            position: 'fixed',
+            transform: 'translate(120px, 200px)'
+          }}/>
+          <img src={ledgerUrl} width={chartObjWidth*.75} style={{
+            position: 'fixed',
+            transform: 'translate(275px, 100px)'
+          }}/>
+          */}
         </div>
-        <ExpansionList>
-           {this.state.spots.map( (spot, i) => <ReleaseForm key={i} obj={spot} update={this.updateSpots}/>)}
-        </ExpansionList>
         <div style={{
           display: 'flex',
           alignItems: 'center',
@@ -145,6 +169,36 @@ export default class extends React.Component {
             marginLeft: '10px',
           }}>{this.state.response}</div>
         </div>
+        <TextField
+          id='text-field-lot-id'
+          label='Lot ID'
+          value={this.state.lotId}
+          floating
+          fullWidth={false}
+          className='md-cell md-cell--top'
+          onChange={ val => {
+            if(isNumeric(val)) {
+              this.setState({ lotId: +val })
+            }
+          }}
+        />
+        <div className='header'>
+        <style jsx>{`
+          .header {
+            display: flex;
+            padding-left: 24px;
+            padding-top: 10px;
+          }
+        `}</style>
+          <div style={{width: 100}}>Spot ID</div>
+          <div style={{width: 165}}>Program Name</div>
+          <div style={{width: 145}}>Target Demographic</div>
+          <div style={{width: 100}}>Target GRP</div>
+          <div style={{width: 130}}>Available Spots</div>
+        </div>
+        <ExpansionList>
+           {this.state.spots.map( (spot, i) => <ReleaseForm key={i} obj={spot} update={this.updateSpots}/>)}
+        </ExpansionList>
       </Dashboard>
     </Provider>
   }

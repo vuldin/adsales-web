@@ -104,15 +104,13 @@ export default class extends React.Component {
           <style jsx>{`
             .header {
               display: flex;
-              justify-content: space-between;
-              width: ${this.store.columnWidths}px;
               padding-left: 24px;
               padding-top: 10px;
             }
           `}</style>
-          <div style={{width: 50}}>Spot ID</div>
-          <div style={{width: 145}}>Program</div>
-          <div style={{width: 105}}>Target</div>
+          <div style={{width: 100}}>Spot ID</div>
+          <div style={{width: 165}}>Program Name</div>
+          <div style={{width: 145}}>Target Demographic</div>
           <div style={{width: 130}}>Available Spots</div>
           <div style={{width: 130}}>Advertiser ID</div>
           <div style={{width: 200}}>{`Number of spots to purchase`}</div>

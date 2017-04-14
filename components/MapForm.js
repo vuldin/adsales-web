@@ -24,10 +24,9 @@ class Label extends PureComponent {
       <style jsx>{`
         .label {
           display: flex;
-          justify-content: space-between;
         }
       `}</style>
-      <div style={{width: 50}}>{obj.adContractId}</div>
+      <div style={{width: 100}}>{obj.adContractId}</div>
       <div style={{width: 145}}>{obj.campaignName}</div>
       <div style={{width: 105}}>{obj.advertiserId}</div>
       <div style={{width: 130}}>{obj.targetGrp}</div>
@@ -46,12 +45,10 @@ export default class ReleaseForm extends Component {
     this.props.store.stop()
   }
   render() {
-    let { focused, columnWidths, store, index } = this.props
+    let { focused, store, index } = this.props
     let obj = store.mapObjs[index]
-    columnWidths = [store.columnWidths] // TODO pass appropriate value to this component
     return <ExpansionPanel
       focused={focused}
-      columnWidths={columnWidths}
       label={<Label index={index}/>}
     >
       <div style={{

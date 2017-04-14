@@ -16,13 +16,12 @@ class Label extends PureComponent {
       <style jsx>{`
         .label {
           display: flex;
-          justify-content: space-between;
         }
       `}</style>
-      <div style={{width: 50}}>{obj.adspotId}</div>
-      <div style={{width: 145}}>{obj.programName}</div>
-      <div style={{width: 105}}>{obj.targetDemographics}</div>
-      <div style={{width: 130}}>{obj.numberReservedSpots}</div>
+      <div style={{width: 100}}>{obj.adspotId}</div>
+      <div style={{width: 165}}>{obj.programName}</div>
+      <div style={{width: 145}}>{obj.targetDemographics}</div>
+      <div style={{width: 100}}>{obj.targetGrp}</div>
       <div style={{width: 130}}>{obj.numberOfSpots}</div>
     </div>
   }
@@ -56,8 +55,7 @@ export default class ReleaseForm extends Component {
     this.props.store.stop()
   }
   render() {
-    let { obj, focused, columnWidths, store, update } = this.props
-    columnWidths = [store.columnWidths] // TODO pass appropriate value to this component
+    let { obj, focused, store, update } = this.props
     let reserveSlider = <Slider
       discrete
       id='Reserves'
@@ -73,7 +71,6 @@ export default class ReleaseForm extends Component {
     />
     return <ExpansionPanel
       focused={focused}
-      columnWidths={columnWidths}
       label={<Label obj={this.state}/>}
       onExpandToggle={ expanded => {
         if(!expanded) update(this.state)

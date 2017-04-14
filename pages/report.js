@@ -99,17 +99,17 @@ export default class extends React.Component {
           <style jsx>{`
             .header {
               display: flex;
-              justify-content: space-between;
-              width: ${this.store.columnWidths}px;
               padding-left: 24px;
               padding-top: 10px;
             }
           `}</style>
           <div style={{width: 150}}>Unique Adspot ID</div>
+          {/*
           <div style={{width: 200}}>Adspot ID</div>
           <div style={{width: 145}}>Contract ID</div>
-          <div style={{width: 105}}>Campaign</div>
-          <div style={{width: 150}}>Program</div>
+          */}
+          <div style={{width: 135}}>Campaign</div>
+          <div style={{width: 165}}>Program</div>
           <div style={{width: 130}}>Target GRP</div>
           <div style={{width: 150}}>Target Demographic</div>
         </div>
