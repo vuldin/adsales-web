@@ -8,8 +8,7 @@ import ReleaseForm from '../components/ReleaseForm'
 import releaseData from '../data/release.json'
 import { Provider } from 'mobx-react'
 import { initStore } from '../store'
-//import broadcasterUrl from '../static/BroadcasterA.png'
-import 'fabric'
+//import 'fabric'
 
 function isNumeric(n) {
   return !isNaN(parseFloat(n)) && isFinite(n);
@@ -93,6 +92,7 @@ export default class extends React.Component {
     })
   }
   componentDidMount() {
+    /*
     let broadcasterUrl = 'static/BroadcasterA.png'
     let agencyAUrl = 'static/AdAgencyA.png'
     let advertiserAUrl = 'static/AdvertiserA.png'
@@ -100,13 +100,11 @@ export default class extends React.Component {
     //let otherPeerUrl = 'static/OtherPeers.png'
     let ledgerUrl = 'static/BlockchainServices.png'
     var canvas = this.__canvas = new fabric.StaticCanvas('canvas');
-    /*
-    canvas.add(
-      new fabric.Rect({ top: 100, left: 100, width: 50, height: 50, fill: '#f55' }),
-      new fabric.Circle({ top: 140, left: 230, radius: 75, fill: 'green' }),
-      new fabric.Triangle({ top: 300, left: 210, width: 100, height: 100, fill: 'blue' })
-    );
-    */
+    //canvas.add(
+      //new fabric.Rect({ top: 100, left: 100, width: 50, height: 50, fill: '#f55' }),
+      //new fabric.Circle({ top: 140, left: 230, radius: 75, fill: 'green' }),
+      //new fabric.Triangle({ top: 300, left: 210, width: 100, height: 100, fill: 'blue' })
+    //);
 
     fabric.Image.fromURL(broadcasterUrl, img => {
       img.scale(0.2)
@@ -144,7 +142,6 @@ export default class extends React.Component {
       img.center()
     })
 
-    /*
     function animate() {
       canvas.item(0).animate('top', canvas.item(0).getTop() === 500 ? '100' : '500', { 
         duration: 1000,
