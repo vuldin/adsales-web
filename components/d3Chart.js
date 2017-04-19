@@ -138,6 +138,20 @@ export default function() {
         .attr('x', 0)
         .attr('y', 0)
 
+        //new------
+            svg.select('defs').append('pattern')
+        .attr('id', 'db-png')
+        .attr('patternUnits', 'userSpaceOnUse')
+        .attr('width', iconWidth / 2)
+        .attr('height', iconHeight / 2)
+      .append('svg:image')
+        .attr('xlink:href', 'static/Database.png')
+        .attr('width', iconWidth / 2)
+        .attr('height', iconHeight / 2)
+        .attr('x', 0)
+        .attr('y', 0)
+        //------
+
     let circle = svg.selectAll('.circle')
         .data(nodes).enter()
       .append('g')
@@ -149,6 +163,7 @@ export default function() {
         .attr('r', radius)
         .attr('transform', d => `translate(${d.x - radius}, ${d.y - radius})` )
         .style('fill', d => `url(#${d.id})` )
+    
     let xOffset = 12
     let yOffset = 8
     circle.append('rect')
@@ -158,6 +173,18 @@ export default function() {
         .attr('height', iconHeight / 2)
         .attr('transform', d => `translate(${d.x - radius + xOffset}, ${d.y - radius + yOffset})` )
         .style('fill', d => `url(#ledger)` )
+
+ //new------
+    let xOffsetdb = 55
+    let yOffsetdb = 12
+        circle.append('rect')
+        .attr('x', radius)
+        .attr('y', radius)
+        .attr('width', iconWidth / 2)
+        .attr('height', iconHeight / 2)
+        .attr('transform', d => `translate(${d.x - radius - xOffsetdb}, ${d.y - radius + yOffsetdb})` )
+        .style('fill', d => `url(#db-png)` )
+        //------
     /*
     circle.append('text')
         .text( d => d.label)
@@ -189,11 +216,13 @@ export default function() {
     state.from.forEach( name => {
       d3Chart.transmit(userMap[name], true)
     })
+
+//Updates setTimeout
     setTimeout( () => {
       state.to.forEach( name => {
         d3Chart.transmit(userMap[name], false)
       })
-    }, drawtime / 2)
+    }, drawtime * 2)
   }
 
   d3Chart.destroy = function(el) {

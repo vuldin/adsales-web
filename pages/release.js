@@ -112,7 +112,7 @@ export default class extends React.Component {
             this.submit(this.state)
             this.store.chartMove = {
               from: ['BroadcasterA'],
-              to: ['AgencyA', 'AdvertiserA', 'AdvertiserC'],
+              to: ['BroadcasterA','AgencyA', 'AdvertiserA', 'AdvertiserC'],
             }
           }}/>
           <div style={{
