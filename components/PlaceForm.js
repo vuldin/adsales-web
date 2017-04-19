@@ -51,6 +51,7 @@ export default class ReleaseForm extends Component {
     return <ExpansionPanel
       focused={focused}
       label={<Label index={index}/>}
+      columnWidths={this.props.columnWidths}
     >
       <div style={{
         display: 'flex',

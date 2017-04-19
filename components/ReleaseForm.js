@@ -75,6 +75,7 @@ export default class ReleaseForm extends Component {
       onExpandToggle={ expanded => {
         if(!expanded) update(this.state)
       }}
+      columnWidths={this.props.columnWidths}
     >
       <TextField
         id='text-field-id'

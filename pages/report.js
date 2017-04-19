@@ -9,6 +9,7 @@ import reportData from '../data/report.json'
 import { Provider } from 'mobx-react'
 import { initStore } from '../store'
 import { toJS } from 'mobx'
+import Chart from '../components/Chart'
 
 function isNumeric(n) {
   return !isNaN(parseFloat(n)) && isFinite(n);
@@ -95,27 +96,7 @@ export default class extends React.Component {
   render() {
     return <Provider store={this.store}>
       <Dashboard>
-        <div className='header'>
-          <style jsx>{`
-            .header {
-              display: flex;
-              padding-left: 24px;
-              padding-top: 10px;
-            }
-          `}</style>
-          <div style={{width: 150}}>Unique Adspot ID</div>
-          {/*
-          <div style={{width: 200}}>Adspot ID</div>
-          <div style={{width: 145}}>Contract ID</div>
-          */}
-          <div style={{width: 135}}>Campaign</div>
-          <div style={{width: 165}}>Program</div>
-          <div style={{width: 130}}>Target GRP</div>
-          <div style={{width: 150}}>Target Demographic</div>
-        </div>
-        <ExpansionList>
-           {this.store.reportObjs.map( (spot, i) => <ReportForm key={i} index={i}/>)}
-        </ExpansionList>
+        <Chart move={this.store.chartMove}/>
         <div style={{
           display: 'flex',
           alignItems: 'center',
@@ -133,12 +114,33 @@ export default class extends React.Component {
           }}/>
           <Button raised primary label='Submit' onClick={() => {
             this.submit(this.store.reportObjs)
+            this.store.chartMove = {
+              from: ['BroadcasterA'],
+              to: ['AgencyA', 'AdvertiserA', 'AdvertiserC'],
+            }
           }}/>
           <div style={{
             color: 'rgba(0,0,0,.54)',
             marginLeft: '10px',
           }}>{this.state.response}</div>
         </div>
+        <div className='header'>
+          <style jsx>{`
+            .header {
+              display: flex;
+              padding-left: 24px;
+              padding-top: 10px;
+            }
+          `}</style>
+          <div style={{width: 150}}>Unique Adspot ID</div>
+          <div style={{width: 135}}>Campaign</div>
+          <div style={{width: 165}}>Program</div>
+          <div style={{width: 130}}>Target GRP</div>
+          <div style={{width: 150}}>Target Demographic</div>
+        </div>
+        <ExpansionList>
+           {this.store.reportObjs.map( (spot, i) => <ReportForm key={i} index={i}/>)}
+        </ExpansionList>
       </Dashboard>
     </Provider>
   }

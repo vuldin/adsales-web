@@ -10,18 +10,22 @@ class Store {
     {
       name: 'BroadcasterA',
       role: 'broadcaster',
+      styleLink: '/static/react-md.blue-deep_orange.min.css',
     },
     {
       name: 'AgencyA',
       role: 'agency',
+      styleLink: '/static/react-md.green-deep_orange.min.css',
     },
     {
       name: 'AdvertiserA',
       role: 'advertiser',
+      styleLink: '/static/react-md.purple-deep_orange.min.css',
     },
     {
       name: 'AdvertiserC',
       role: 'advertiser',
+      styleLink: '/static/react-md.amber-deep_orange.min.css',
     },
   ]
   @observable username = 'BroadcasterA'
@@ -146,6 +150,10 @@ class Store {
     }
     */
   ]
+  @observable chartMove = {
+    from: [],
+    to: [],
+  }
 
   constructor (isServer, lastUpdate) {
     this.lastUpdate = lastUpdate

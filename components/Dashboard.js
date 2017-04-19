@@ -66,9 +66,10 @@ export default class Dashboard extends PureComponent {
     const drawerHeader = <Toolbar className='md-divider-border md-divider-border--bottom'>
       <div className='md-title md-title--toolbar'>{store.toolbarTitle}</div>
     </Toolbar>
+    let styleLink = store.users.filter( user => user.name == store.username)[0].styleLink
     return <div>
       <Head>
-        <link rel='stylesheet' href='/static/react-md.min.css' />
+        <link rel='stylesheet' href={`${styleLink}`} />
         <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto:300,400,500' />
         <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Material+Icons' />
         <title>{store.title}</title>

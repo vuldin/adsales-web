@@ -9,6 +9,7 @@ import releaseData from '../data/release.json'
 import { Provider } from 'mobx-react'
 import { initStore } from '../store'
 //import 'fabric'
+import Chart from '../components/Chart'
 
 function isNumeric(n) {
   return !isNaN(parseFloat(n)) && isFinite(n);
@@ -91,73 +92,10 @@ export default class extends React.Component {
       obj.component.href == this.props.url.pathname ? obj.component.active = true : obj.component.active = false
     })
   }
-  componentDidMount() {
-    /*
-    let broadcasterUrl = 'static/BroadcasterA.png'
-    let agencyAUrl = 'static/AdAgencyA.png'
-    let advertiserAUrl = 'static/AdvertiserA.png'
-    let advertiserCUrl = 'static/AdvertiserC.png'
-    //let otherPeerUrl = 'static/OtherPeers.png'
-    let ledgerUrl = 'static/BlockchainServices.png'
-    var canvas = this.__canvas = new fabric.StaticCanvas('canvas');
-    //canvas.add(
-      //new fabric.Rect({ top: 100, left: 100, width: 50, height: 50, fill: '#f55' }),
-      //new fabric.Circle({ top: 140, left: 230, radius: 75, fill: 'green' }),
-      //new fabric.Triangle({ top: 300, left: 210, width: 100, height: 100, fill: 'blue' })
-    //);
-
-    fabric.Image.fromURL(broadcasterUrl, img => {
-      img.scale(0.2)
-      canvas.add(img.set({
-        left: 0,
-        top: 300 - img.getHeight(),
-        clipTo: ctx => ctx.arc(0, 0, 270, 0, Math.PI * 2, true)
-      }))
-    })
-    fabric.Image.fromURL(agencyAUrl, img => {
-      canvas.add(img.set({
-        left: 200,
-        top: 50,
-        clipTo: ctx => ctx.arc(0, 0, 270, 0, Math.PI * 2, true)
-      }).scale(0.2))
-    })
-    fabric.Image.fromURL(advertiserAUrl, img => {
-      canvas.add(img.set({
-        left: 400,
-        top: 50,
-        clipTo: ctx => ctx.arc(0, 0, 270, 0, Math.PI * 2, true)
-      }).scale(0.2))
-    })
-    fabric.Image.fromURL(advertiserCUrl, img => {
-      canvas.add(img.set({
-        left: 400,
-        top: 150,
-        clipTo: ctx => ctx.arc(0, 0, 270, 0, Math.PI * 2, true)
-      }).scale(0.2))
-    })
-    fabric.Image.fromURL(ledgerUrl, img => {
-      canvas.add(img.set({
-        clipTo: ctx => ctx.arc(0, 0, 270, 0, Math.PI * 2, true)
-      }).scale(0.2))
-      img.center()
-    })
-
-    function animate() {
-      canvas.item(0).animate('top', canvas.item(0).getTop() === 500 ? '100' : '500', { 
-        duration: 1000,
-        onChange: canvas.renderAll.bind(canvas),
-        onComplete: animate
-      });
-    }
-    animate();
-    */
-  }
   render() {
-    let chartObjWidth = 250
-    let rectangle = 'l0,100 l175,0 l0,-100 l-175,0'
     return <Provider store={this.store}>
       <Dashboard>
-        <canvas id='canvas' width='900' height='300' style={{backgroundColor: 'white'}}/>
+        <Chart move={this.store.chartMove}/>
         <div style={{
           display: 'flex',
           alignItems: 'center',
@@ -172,6 +110,10 @@ export default class extends React.Component {
           }}/>
           <Button raised primary label='Submit' onClick={() => {
             this.submit(this.state)
+            this.store.chartMove = {
+              from: ['BroadcasterA'],
+              to: ['AgencyA', 'AdvertiserA', 'AdvertiserC'],
+            }
           }}/>
           <div style={{
             color: 'rgba(0,0,0,.54)',

@@ -9,6 +9,7 @@ import mapData from '../data/map.json'
 import { Provider } from 'mobx-react'
 import { initStore } from '../store'
 import { toJS } from 'mobx'
+import Chart from '../components/Chart'
 
 function isNumeric(n) {
   return !isNaN(parseFloat(n)) && isFinite(n);
@@ -94,6 +95,31 @@ export default class extends React.Component {
   render() {
     return <Provider store={this.store}>
       <Dashboard>
+        <Chart move={this.store.chartMove}/>
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+        }}>
+          <Button raised primary label='Populate' onClick={() => {
+            let data = this.populate()
+            let arr = this.store.mapObjs.map( (spot, i) => {
+              spot.campaignName = data[i].campaignName
+              return spot
+            })
+            this.store.mapObjs = arr
+          }}/>
+          <Button raised primary label='Submit' onClick={() => {
+            this.submit(this.store.mapObjs)
+            this.store.chartMove = {
+              from: ['AgencyA'],
+              to: ['BroadcasterA', 'AdvertiserA', 'AdvertiserC'],
+            }
+          }}/>
+          <div style={{
+            color: 'rgba(0,0,0,.54)',
+            marginLeft: '10px',
+          }}>{this.state.response}</div>
+        </div>
         <div className='header'>
           <style jsx>{`
             .header {
@@ -112,26 +138,6 @@ export default class extends React.Component {
         <ExpansionList>
            {this.store.mapObjs.map( (spot, i) => <MapForm key={i} index={i}/>)}
         </ExpansionList>
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-        }}>
-          <Button raised primary label='Populate' onClick={() => {
-            let data = this.populate()
-            let arr = this.store.mapObjs.map( (spot, i) => {
-              spot.campaignName = data[i].campaignName
-              return spot
-            })
-            this.store.mapObjs = arr
-          }}/>
-          <Button raised primary label='Submit' onClick={() => {
-            this.submit(this.store.mapObjs)
-          }}/>
-          <div style={{
-            color: 'rgba(0,0,0,.54)',
-            marginLeft: '10px',
-          }}>{this.state.response}</div>
-        </div>
       </Dashboard>
     </Provider>
   }
