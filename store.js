@@ -138,7 +138,7 @@ class Store {
   @observable traceObjs = [
   ]
   @observable traceIndex = -1
-  apiServer = 'adsales-api-xrayyee-5.mybluemix.net'
+  apiServer = 'adsales-api-xrayyee-1828.mybluemix.net'
   blockchainCount = 427
   @observable blockchain = [
     /*
@@ -154,6 +154,31 @@ class Store {
     from: [],
     to: [],
   }
+
+  barchartData2012 = [
+    {quarter: 1, earnings: 13000},
+    {quarter: 2, earnings: 16500},
+    {quarter: 3, earnings: 14250},
+    {quarter: 4, earnings: 19000},
+  ]
+  barchartData2013 = [
+    {quarter: 1, earnings: 15000},
+    {quarter: 2, earnings: 12500},
+    {quarter: 3, earnings: 19500},
+    {quarter: 4, earnings: 13000},
+  ]
+  barchartData2014 = [
+    {quarter: 1, earnings: 11500},
+    {quarter: 2, earnings: 13250},
+    {quarter: 3, earnings: 20000},
+    {quarter: 4, earnings: 15500},
+  ]
+  barchartData2015 = [
+    {quarter: 1, earnings: 18000},
+    {quarter: 2, earnings: 13250},
+    {quarter: 3, earnings: 15000},
+    {quarter: 4, earnings: 12000},
+  ]
 
   constructor (isServer, lastUpdate) {
     this.lastUpdate = lastUpdate

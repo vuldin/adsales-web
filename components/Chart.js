@@ -30,9 +30,11 @@ export default class extends React.Component{
     }
   }
   componentWillUnmount() {
-    //let el = this.getDOMNode()
+    /*
     let el = this.refs.chart
+    console.log(el)
     this.d3Chart.destroy(el)
+    */
   }
   render() {
     return <div ref='chart' style={{

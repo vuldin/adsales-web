@@ -6,6 +6,7 @@ import Dashboard from '../components/Dashboard'
 //import map from '../lib/map'
 import { observer } from 'mobx-react'
 import Paper from 'react-md/lib/Papers'
+import { VictoryChart, VictoryTheme, VictoryAxis, VictoryStack, VictoryBar, VictoryPie } from 'victory'
 
 @observer
 export default class Index extends React.Component {
@@ -93,6 +94,72 @@ export default class Index extends React.Component {
               </Paper>
             </div>
           </div>)}
+        </div>
+        <div style={{
+          display: 'flex',
+        }}>
+          <div style={{width: `${800/3}px`, height: '250px'}}>
+            <VictoryPie
+              theme={VictoryTheme.material}
+              width={800 / 3}
+              height={250}
+            />
+          </div>
+          <div style={{width: `${800/3}px`, height: '250px'}}>
+            <VictoryPie
+              theme={VictoryTheme.material}
+              width={800 / 3}
+              height={250}
+            />
+          </div>
+          <div style={{width: `${800/3}px`, height: '250px'}}>
+            <VictoryPie
+              theme={VictoryTheme.material}
+              width={800 / 3}
+              height={250}
+            />
+          </div>
+        </div>
+        <div style={{width: '800px', height: '250px'}}>
+          <VictoryChart
+            theme={VictoryTheme.material}
+            responsive={false}
+            width={800}
+            height={250}
+          >
+            <VictoryAxis
+              tickValues={[1, 2, 3, 4]}
+              tickFormat={["Quarter 1", "Quarter 2", "Quarter 3", "Quarter 4"]}
+            />
+            <VictoryAxis
+              dependentAxis
+              tickFormat={(x) => (`$${x / 1000}k`)}
+            />
+            <VictoryStack
+              colorScale={"warm"}
+            >
+              <VictoryBar
+                data={this.store.barchartData2012}
+                x="quarter"
+                y="earnings"
+              />
+              <VictoryBar
+                data={this.store.barchartData2013}
+                x="quarter"
+                y="earnings"
+              />
+              <VictoryBar
+                data={this.store.barchartData2014}
+                x="quarter"
+                y="earnings"
+              />
+              <VictoryBar
+                data={this.store.barchartData2015}
+                x="quarter"
+                y="earnings"
+              />
+            </VictoryStack>
+          </VictoryChart>
         </div>
       </Dashboard>
     </Provider>

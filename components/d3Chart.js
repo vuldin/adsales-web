@@ -82,15 +82,23 @@ let transition = (node, path, isReverse) => {
 
 export default function() {
   let d3Chart = {}
-  d3Chart.transmit = (userIndex, isReverse) => {
-    let svg = d3.select('svg')
-    let link = d3.selectAll('.link')
+  d3Chart.check = (users, isOn) => {
+    d3.selectAll('.check')
+        .filter( d => {
+          return users.indexOf(d.label) > -1
+        })
+        .style('opacity', isOn ? 1 : 0)
+  }
+  d3Chart.transmit = (el, userIndex, isReverse) => {
+    let svg = d3.select(el).select('svg')
+    let link = d3.select(el).selectAll('.link')
     let getCircle = () => {
       let loc = links[userIndex].target
       if(isReverse) loc = links[userIndex].source
       return svg.append('circle')
           .attr('r', 5)
-          .style('fill', '#ccc')
+          //.style('fill', '#ccc')
+          .style('fill', '#ff9800')
           .attr('transform', `translate(${loc.x - 5 / 2}, ${loc.y - 5 / 2})` )
     }
     let si = setInterval(() => transition(getCircle(), d3.select(link[0][userIndex]), isReverse), 300 )
@@ -138,9 +146,8 @@ export default function() {
         .attr('x', 0)
         .attr('y', 0)
 
-        //new------
-            svg.select('defs').append('pattern')
-        .attr('id', 'db-png')
+    svg.select('defs').append('pattern')
+        .attr('id', 'db')
         .attr('patternUnits', 'userSpaceOnUse')
         .attr('width', iconWidth / 2)
         .attr('height', iconHeight / 2)
@@ -150,7 +157,6 @@ export default function() {
         .attr('height', iconHeight / 2)
         .attr('x', 0)
         .attr('y', 0)
-        //------
 
     let circle = svg.selectAll('.circle')
         .data(nodes).enter()
@@ -163,10 +169,11 @@ export default function() {
         .attr('r', radius)
         .attr('transform', d => `translate(${d.x - radius}, ${d.y - radius})` )
         .style('fill', d => `url(#${d.id})` )
-    
+
     let xOffset = 12
     let yOffset = 8
     circle.append('rect')
+        .attr('class', 'ledger')
         .attr('x', radius)
         .attr('y', radius)
         .attr('width', iconWidth / 2)
@@ -174,27 +181,42 @@ export default function() {
         .attr('transform', d => `translate(${d.x - radius + xOffset}, ${d.y - radius + yOffset})` )
         .style('fill', d => `url(#ledger)` )
 
- //new------
+      let size = 15,
+        x = 0,
+        y = 0,
+        xLedgerOffset = 28,
+        yLedgerOffset = 26
+      let coordinates = [
+        {x: x + (size / 4), y: y + (size / 3)},
+        {x: x + (size / 2.2), y: (y + size) - (size / 4)},
+        {x: (x + size) - (size / 8), y: (y + (size / 10))},
+      ]
+      let line = d3.svg.line()
+          .x( d => d.x )
+          .y( d => d.y )
+          .interpolate('basic')
+      let mark = circle.append('path')
+          .attr('class', 'check')
+          .attr('d', line(coordinates))
+          .style({
+            'stroke-width' : 3,
+            'stroke' : '#1b5e20',
+            'fill' : 'none',
+            'opacity': 1,
+          })
+        .attr('transform', d => {
+          return `translate(${d.x + xLedgerOffset}, ${d.y + yLedgerOffset})`
+        })
+
     let xOffsetdb = 55
     let yOffsetdb = 12
-        circle.append('rect')
+    circle.append('rect')
         .attr('x', radius)
         .attr('y', radius)
         .attr('width', iconWidth / 2)
         .attr('height', iconHeight / 2)
         .attr('transform', d => `translate(${d.x - radius - xOffsetdb}, ${d.y - radius + yOffsetdb})` )
-        .style('fill', d => `url(#db-png)` )
-        //------
-    /*
-    circle.append('text')
-        .text( d => d.label)
-        .style('font-family', 'Roboto,sans-serif')
-        .style('font-weight', 400)
-        .style('line-height', 1.42857)
-        .style('font-size', '13px')
-        .style('fill', 'rgba(0,0,0,.87)')
-        .attr('transform', d => `translate(${d.x - radius}, ${d.y - radius})` )
-    */
+        .style('fill', d => `url(#db)` )
   }
 
   d3Chart.create = function(el, props, state) {
@@ -206,28 +228,37 @@ export default function() {
     this._drawSymbols(svg)
   };
 
-  d3Chart.update = function(el, state) {
+  d3Chart.update = async function(el, state) {
     let userMap = {
       BroadcasterA: 0,
       AgencyA: 1,
       AdvertiserA: 2,
       AdvertiserC: 3,
     }
-    state.from.forEach( name => {
-      d3Chart.transmit(userMap[name], true)
-    })
 
-//Updates setTimeout
-    setTimeout( () => {
-      state.to.forEach( name => {
-        d3Chart.transmit(userMap[name], false)
+    d3Chart.check(state.to, false)
+    let doTransmit = () => {
+      return new Promise( (resolve, reject) => {
+        state.from.forEach( name => {
+          d3Chart.transmit(el, userMap[name], true)
+        })
+        setTimeout( () => {
+          state.to.forEach( name => {
+            d3Chart.transmit(el, userMap[name], false)
+          })
+          setTimeout( () => { resolve() }, drawtime * 2)
+        }, drawtime * 2)
       })
-    }, drawtime * 2)
+
+    }
+    await doTransmit()
+    d3Chart.check(state.to, true)
   }
 
   d3Chart.destroy = function(el) {
     // Any clean-up would go here
     // in this example there is nothing to do
+    d3.select(el).select('svg').remove()
   };
 
   d3Chart._scales = function(el, domain) {
@@ -258,16 +289,13 @@ export default function() {
     var point = g.selectAll('.d3-point')
       .data(data, function(d) { return d.id; });
 
-    // ENTER
     point.enter().append('circle')
         .attr('class', 'd3-point');
 
-    // ENTER & UPDATE
     point.attr('cx', function(d) { return scales.x(d.x); })
         .attr('cy', function(d) { return scales.y(d.y); })
         .attr('r', function(d) { return scales.z(d.z); });
 
-    // EXIT
     point.exit()
         .remove();
   };
