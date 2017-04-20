@@ -147,6 +147,7 @@ class Store {
       user: 'BroadcasterA',
       type: 'release inventory',
       data: 'data',
+      date: ...,
     }
     */
   ]

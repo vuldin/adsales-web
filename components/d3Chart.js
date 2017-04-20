@@ -97,8 +97,7 @@ export default function() {
       if(isReverse) loc = links[userIndex].source
       return svg.append('circle')
           .attr('r', 5)
-          //.style('fill', '#ccc')
-          .style('fill', '#ff9800')
+          .style('fill', isReverse ?  '#ff9800' : '#1b5e20')
           .attr('transform', `translate(${loc.x - 5 / 2}, ${loc.y - 5 / 2})` )
     }
     let si = setInterval(() => transition(getCircle(), d3.select(link[0][userIndex]), isReverse), 300 )
@@ -133,7 +132,6 @@ export default function() {
         .attr('height', iconHeight)
         .attr('x', 0)
         .attr('y', 0)
-
     svg.select('defs').append('pattern')
         .attr('id', 'ledger')
         .attr('patternUnits', 'userSpaceOnUse')
@@ -145,7 +143,6 @@ export default function() {
         .attr('height', iconHeight / 2)
         .attr('x', 0)
         .attr('y', 0)
-
     svg.select('defs').append('pattern')
         .attr('id', 'db')
         .attr('patternUnits', 'userSpaceOnUse')
@@ -172,7 +169,7 @@ export default function() {
 
     let xOffset = 12
     let yOffset = 8
-    circle.append('rect')
+    circle.filter(d => d.label != 'Blockchain').append('rect')
         .attr('class', 'ledger')
         .attr('x', radius)
         .attr('y', radius)
@@ -195,14 +192,14 @@ export default function() {
           .x( d => d.x )
           .y( d => d.y )
           .interpolate('basic')
-      let mark = circle.append('path')
+      let mark = circle.filter(d => d.label != 'Blockchain').append('path')
           .attr('class', 'check')
           .attr('d', line(coordinates))
           .style({
             'stroke-width' : 3,
             'stroke' : '#1b5e20',
             'fill' : 'none',
-            'opacity': 1,
+            'opacity': 0,
           })
         .attr('transform', d => {
           return `translate(${d.x + xLedgerOffset}, ${d.y + yLedgerOffset})`
@@ -210,7 +207,7 @@ export default function() {
 
     let xOffsetdb = 55
     let yOffsetdb = 12
-    circle.append('rect')
+    circle.filter(d => d.label != 'Blockchain').append('rect')
         .attr('x', radius)
         .attr('y', radius)
         .attr('width', iconWidth / 2)
@@ -229,30 +226,33 @@ export default function() {
   };
 
   d3Chart.update = async function(el, state) {
-    let userMap = {
-      BroadcasterA: 0,
-      AgencyA: 1,
-      AdvertiserA: 2,
-      AdvertiserC: 3,
-    }
-
     d3Chart.check(state.to, false)
-    let doTransmit = () => {
+
+    let doTransmit = direction => {
+      let userMap = {
+        BroadcasterA: 0,
+        AgencyA: 1,
+        AdvertiserA: 2,
+        AdvertiserC: 3,
+      }
       return new Promise( (resolve, reject) => {
-        state.from.forEach( name => {
-          d3Chart.transmit(el, userMap[name], true)
-        })
-        setTimeout( () => {
+        if(direction == 'from') {
+          state.from.forEach( name => {
+            d3Chart.transmit(el, userMap[name], true)
+          })
+        } else {
           state.to.forEach( name => {
             d3Chart.transmit(el, userMap[name], false)
           })
-          setTimeout( () => { resolve() }, drawtime * 2)
-        }, drawtime * 2)
+        }
+        setTimeout( () => resolve(), drawtime * 2)
       })
 
     }
-    await doTransmit()
-    d3Chart.check(state.to, true)
+
+    await doTransmit('from')
+    d3Chart.check(state.to.concat(state.from), true)
+    await doTransmit('to')
   }
 
   d3Chart.destroy = function(el) {

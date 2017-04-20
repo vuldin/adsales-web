@@ -84,6 +84,7 @@ export default class extends React.Component {
       id: `...${Math.floor(Math.random() * (max - min + 1)) + min}`,
       user: 'BroadcasterA',
       type: 'Release Inventory',
+      date: (new Date()).getTime(),
     })
     this.store.blockchain = newBlockchain
   }
